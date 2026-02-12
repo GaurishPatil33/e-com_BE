@@ -1,6 +1,5 @@
-import { Document } from "mongoose";
-
-export interface ICategory extends Document {
+export interface ICategory {
+    id: string;
     name: string;
     slug: string;
     description?: string;
@@ -9,6 +8,8 @@ export interface ICategory extends Document {
         public_id: string;
         type: 'image';
     }[];
-    parentId: string | null;
+    parentId: string | null; 
     isActive: boolean;
+    createdAt: string; 
+    updatedAt: string; 
 }

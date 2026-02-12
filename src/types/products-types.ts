@@ -1,18 +1,19 @@
-import { Document, Schema } from "mongoose";
-
-export interface IProduct extends Document {
+export interface IProduct {
+    id: string;
     title: string;
     brand?: string;
     price: number;
     discountPercentage?: number;
-    category: Schema.Types.ObjectId[];
+    category: string[];
     description?: string;
     stock?: number;
     rating?: number;
-    reviews?: Schema.Types.ObjectId[];
+    reviews?: string[]; // Array of review IDs (strings)
     media: {
         url: string;
         public_id: string;
         type: "image" | "video" | "youtube";
     }[];
+    createdAt: string;
+    updatedAt: string;
 }

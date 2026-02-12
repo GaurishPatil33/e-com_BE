@@ -1,6 +1,7 @@
-import { Document } from "mongoose";
-
-export interface IPost extends Document {
+export interface IPost {
+    id: string; 
     title: string;
     content: string;
+    createdAt: string;
+    updatedAt: string;
 }

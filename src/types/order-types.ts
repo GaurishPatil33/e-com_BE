@@ -1,9 +1,8 @@
-import { Document, Schema } from "mongoose";
-
-export interface IOrder extends Document {
-    userId: Schema.Types.ObjectId;
+export interface IOrder {
+    id: string; 
+    userId: string;
     items: {
-        productId: Schema.Types.ObjectId;
+        productId: string; 
         title: string;
         quantity: number;
         priceAtPurchase: number;
@@ -20,4 +19,6 @@ export interface IOrder extends Document {
     paymentStatus: "pending" | "paid" | "failed";
     orderStatus: "processing" | "shipped" | "delivered" | "cancelled";
     totalAmount: number;
+    createdAt: string;
+    updatedAt: string;
 }
