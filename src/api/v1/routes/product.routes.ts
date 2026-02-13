@@ -1,5 +1,5 @@
-import { Router, Request, Response } from 'express'; 
-import Product from '../models/product.model';
+import { Router } from 'express';
+import { getAllProducts, getProductById, createProduct, updateProduct, deleteProduct } from '../controllers/product.controller';
 
 const router = Router();
 
@@ -153,15 +153,28 @@ const router = Router();
  *                 $ref: '#/components/schemas/Product'
  *       500:
  *         description: Server error
+ *   post:
+ *     summary: Create a new product
+ *     tags: [Products]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/Product'
+ *     responses:
+ *       201:
+ *         description: The created product.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Product'
+ *       500:
+ *         description: Server error
  */
-router.get('/', async (req: Request, res: Response) => {
-    try {
-        const products = await Product.find();
-        res.status(200).json(products);
-    } catch (error) {
-        res.status(500).json({ message: 'Server Error' });
-    }
-});
+router.route('/')
+    .get(getAllProducts)
+    .post(createProduct);
 
 /**
  * @swagger
@@ -187,18 +200,54 @@ router.get('/', async (req: Request, res: Response) => {
  *         description: Product not found
  *       500:
  *         description: Server error
+ *   put:
+ *     summary: Update a product by ID
+ *     tags: [Products]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: The product ID
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/Product'
+ *     responses:
+ *       200:
+ *         description: The updated product.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Product'
+ *       404:
+ *         description: Product not found
+ *       500:
+ *         description: Server error
+ *   delete:
+ *     summary: Delete a product by ID
+ *     tags: [Products]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: The product ID
+ *     responses:
+ *       204:
+ *         description: Product deleted successfully
+ *       404:
+ *         description: Product not found
+ *       500:
+ *         description: Server error
  */
-router.get('/:id', async (req: Request, res: Response) => {
-    try {
-        const product = await Product.findById(req.params.id);
-        if (!product) {
-            res.status(404).json({ message: 'Product not found' });
-            return;
-        }
-        res.status(200).json(product);
-    } catch (error) {
-        res.status(500).json({ message: 'Server Error' });
-    }
-});
+router.route('/:id')
+    .get(getProductById)
+    .put(updateProduct)
+    .delete(deleteProduct);
 
 export default router;

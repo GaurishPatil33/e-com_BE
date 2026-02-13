@@ -1,28 +1,22 @@
 import { ProductModel } from '../models/product.model';
 import { IProduct } from '../../../types/products-types';
 
-export class ProductService {
-  static async getAllProducts(): Promise<IProduct[]> {
-    return ProductModel.findAll();
-  }
+export const findAllProducts = async () => {
+    return await ProductModel.findAll();
+};
 
-  static async getProductById(id: string): Promise<IProduct | null> {
-    return ProductModel.findById(id);
-  }
+export const findProductById = async (id: string) => {
+    return await ProductModel.findById(id);
+};
 
-  static async getProductsByCategoryId(categoryId: string): Promise<IProduct[]> {
-    return ProductModel.findByCategoryId(categoryId);
-  }
+export const createProduct = async (productData: Omit<IProduct, 'id' | 'createdAt' | 'updatedAt'>) => {
+    return await ProductModel.create(productData);
+};
 
-  static async createProduct(productData: Omit<IProduct, 'id' | 'createdAt' | 'updatedAt'>): Promise<IProduct> {
-    return ProductModel.create(productData);
-  }
+export const updateProduct = async (id: string, updates: Partial<Omit<IProduct, 'id' | 'createdAt' | 'updatedAt'>>) => {
+    return await ProductModel.update(id, updates);
+};
 
-  static async updateProduct(id: string, updates: Partial<Omit<IProduct, 'id' | 'createdAt' | 'updatedAt'>>): Promise<IProduct | null> {
-    return ProductModel.update(id, updates);
-  }
-
-  static async deleteProduct(id: string): Promise<boolean> {
-    return ProductModel.delete(id);
-  }
-}
+export const deleteProduct = async (id: string) => {
+    return await ProductModel.delete(id);
+};
