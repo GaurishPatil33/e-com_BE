@@ -86,7 +86,7 @@ describe('Category API', () => {
       const res = await request(app).get('/api/v1/categories');
 
       expect(res.statusCode).toEqual(500);
-      expect(res.body).toEqual({ message: 'Server Error' });
+      expect(res.body).toEqual({ message: 'Database error', stack: expect.any(String) });
     });
   });
 
@@ -147,7 +147,7 @@ describe('Category API', () => {
         .send(newCategoryInput);
 
       expect(res.statusCode).toEqual(500);
-      expect(res.body).toEqual({ message: 'Server Error' });
+      expect(res.body).toEqual({ message: 'Database error', stack: expect.any(String) });
     });
   });
 
@@ -187,7 +187,7 @@ describe('Category API', () => {
       const res = await request(app).get('/api/v1/categories/someid');
 
       expect(res.statusCode).toEqual(500);
-      expect(res.body).toEqual({ message: 'Server Error' });
+      expect(res.body).toEqual({ message: 'Database error', stack: expect.any(String) });
     });
   });
 
@@ -239,6 +239,8 @@ describe('Category API', () => {
     });
 
     it('should return 500 if there is a server error', async () => {
+      const categoryId = 'catToUpdate';
+      const updateData = { name: 'New Name' };
       mockedCategoryService.updateCategory.mockRejectedValue(new Error('Database error'));
 
       const res = await request(app)
@@ -247,7 +249,7 @@ describe('Category API', () => {
         .send({ name: 'New Name' });
 
       expect(res.statusCode).toEqual(500);
-      expect(res.body).toEqual({ message: 'Server Error' });
+      expect(res.body).toEqual({ message: 'Database error', stack: expect.any(String) });
     });
   });
 
@@ -290,7 +292,7 @@ describe('Category API', () => {
         .set('Cookie', [`token=${adminToken}`]);
 
       expect(res.statusCode).toEqual(500);
-      expect(res.body).toEqual({ message: 'Server Error' });
+      expect(res.body).toEqual({ message: 'Database error', stack: expect.any(String) });
     });
   });
 
@@ -330,7 +332,7 @@ describe('Category API', () => {
       const res = await request(app).get('/api/v1/categories/slug/some-slug');
 
       expect(res.statusCode).toEqual(500);
-      expect(res.body).toEqual({ message: 'Server Error' });
+      expect(res.body).toEqual({ message: 'Database error', stack: expect.any(String) });
     });
   });
 });

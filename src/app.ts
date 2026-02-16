@@ -16,6 +16,10 @@ import categoryRoutes from './api/v1/routes/category.routes';
 import reviewRoutes from './api/v1/routes/review.routes';
 import postRoutes from './api/v1/routes/post.routes';
 import shipmentRoutes from './api/v1/routes/shipment.routes';
+import userRoutes from './api/v1/routes/user.routes';
+
+// middlewares
+import { errorHandler } from './middlewares/error.middleware';
 
 
 const app: Application = express();
@@ -58,5 +62,8 @@ app.use('/api/v1/categories', categoryRoutes);
 app.use('/api/v1/reviews', reviewRoutes);
 app.use('/api/v1/posts', postRoutes);
 app.use('/api/v1/shipments', shipmentRoutes);
+app.use('/api/v1/users', userRoutes);
+
+app.use(errorHandler);
 
 export default app;

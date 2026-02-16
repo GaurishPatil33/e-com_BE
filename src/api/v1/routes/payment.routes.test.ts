@@ -100,7 +100,7 @@ describe('Payment API', () => {
         .set('Cookie', [`token=${adminToken}`]);
 
       expect(res.statusCode).toEqual(500);
-      expect(res.body).toEqual({ message: 'Server Error' });
+      expect(res.body).toEqual({ message: 'Database error', stack: expect.any(String) });
     });
   });
 
@@ -169,7 +169,7 @@ describe('Payment API', () => {
         .send(newPaymentInput);
 
       expect(res.statusCode).toEqual(500);
-      expect(res.body).toEqual({ message: 'Server Error' });
+      expect(res.body).toEqual({ message: 'Database error', stack: expect.any(String) });
     });
   });
 
@@ -223,7 +223,7 @@ describe('Payment API', () => {
         .set('Cookie', [`token=${customerToken}`]);
 
       expect(res.statusCode).toEqual(500);
-      expect(res.body).toEqual({ message: 'Server Error' });
+      expect(res.body).toEqual({ message: 'Database error', stack: expect.any(String) });
     });
   });
 
@@ -285,7 +285,7 @@ describe('Payment API', () => {
         .send({ status: 'refunded' });
 
       expect(res.statusCode).toEqual(500);
-      expect(res.body).toEqual({ message: 'Server Error' });
+      expect(res.body).toEqual({ message: 'Database error', stack: expect.any(String) });
     });
   });
 
@@ -332,7 +332,7 @@ describe('Payment API', () => {
         .set('Cookie', [`token=${customerToken}`]);
 
       expect(res.statusCode).toEqual(500);
-      expect(res.body).toEqual({ message: 'Server Error' });
+      expect(res.body).toEqual({ message: 'Database error', stack: expect.any(String) });
     });
   });
 });

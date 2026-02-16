@@ -2,6 +2,7 @@ import { Router } from 'express';
 import { registerUser, loginUser, logoutUser, getCurrentUser } from '../controllers/auth.controller';
 import { authenticate } from '../../../middlewares/auth.middleware';
 import { asyncHandler } from '../../../middlewares/asyncHandler';
+import { validate, registerUserSchema, loginUserSchema } from '../../../middlewares/validate.middleware';
 
 const router = Router();
 
@@ -70,7 +71,7 @@ const router = Router();
  *       500:
  *         description: Server error
  */
-router.post('/register', asyncHandler(registerUser));
+router.post('/register', validate(registerUserSchema), asyncHandler(registerUser));
 
 /**
  * @swagger
@@ -131,7 +132,7 @@ router.post('/register', asyncHandler(registerUser));
  *       500:
  *         description: Server error
  */
-router.post('/login', asyncHandler(loginUser));
+router.post('/login', validate(loginUserSchema), asyncHandler(loginUser));
 
 /**
  * @swagger

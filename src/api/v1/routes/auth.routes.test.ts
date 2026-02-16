@@ -71,7 +71,13 @@ describe('Auth API', () => {
         .send(newUserInput);
 
       expect(res.statusCode).toEqual(400);
-      expect(res.body).toEqual({ message: 'All fields are required' });
+      expect(res.body).toEqual({
+        errors: expect.arrayContaining([
+          expect.objectContaining({ msg: 'Phone number is required' }),
+          expect.objectContaining({ msg: 'Phone number must be a string' }),
+          expect.objectContaining({ msg: 'Password must be at least 6 characters long' }),
+        ]),
+      });
     });
 
     it('should return 409 if user with email already exists', async () => {
@@ -118,7 +124,7 @@ describe('Auth API', () => {
         .send(newUserInput);
 
       expect(res.statusCode).toEqual(500);
-      expect(res.body).toEqual({ message: 'Server Error' });
+      expect(res.body).toEqual({ message: 'Database error', stack: expect.any(String) });
     });
   });
 
@@ -174,7 +180,11 @@ describe('Auth API', () => {
         .send(loginInput);
 
       expect(res.statusCode).toEqual(400);
-      expect(res.body).toEqual({ message: 'Email and password are required' });
+      expect(res.body).toEqual({
+        errors: expect.arrayContaining([
+          expect.objectContaining({ msg: 'Password is required' }),
+        ]),
+      });
     });
 
     it('should return 401 for invalid credentials', async () => {
@@ -204,7 +214,7 @@ describe('Auth API', () => {
         .send(loginInput);
 
       expect(res.statusCode).toEqual(500);
-      expect(res.body).toEqual({ message: 'Server Error' });
+      expect(res.body).toEqual({ message: 'Database error', stack: expect.any(String) });
     });
   });
 
@@ -308,7 +318,7 @@ describe('Auth API', () => {
         .set('Cookie', ['token=valid-token']);
 
       expect(res.statusCode).toEqual(500);
-      expect(res.body).toEqual({ message: 'Server Error' });
+      expect(res.body).toEqual({ message: 'Database error', stack: expect.any(String) });
     });
   });
 });

@@ -83,7 +83,7 @@ describe('Address API', () => {
         .set('Cookie', [`token=${customerToken}`]);
 
       expect(res.statusCode).toEqual(500);
-      expect(res.body).toEqual({ message: 'Server Error' });
+      expect(res.body).toEqual({ message: 'Database error', stack: expect.any(String) });
     });
   });
 
@@ -150,7 +150,7 @@ describe('Address API', () => {
         .send(newAddressInput);
 
       expect(res.statusCode).toEqual(500);
-      expect(res.body).toEqual({ message: 'Server Error' });
+      expect(res.body).toEqual({ message: 'Database error', stack: expect.any(String) });
     });
   });
 
@@ -203,7 +203,7 @@ describe('Address API', () => {
         .set('Cookie', [`token=${customerToken}`]);
 
       expect(res.statusCode).toEqual(500);
-      expect(res.body).toEqual({ message: 'Server Error' });
+      expect(res.body).toEqual({ message: 'Database error', stack: expect.any(String) });
     });
   });
 
@@ -264,7 +264,7 @@ describe('Address API', () => {
         .send({ city: 'NewCity' });
 
       expect(res.statusCode).toEqual(500);
-      expect(res.body).toEqual({ message: 'Server Error' });
+      expect(res.body).toEqual({ message: 'Database error', stack: expect.any(String) });
     });
   });
 
@@ -307,7 +307,7 @@ describe('Address API', () => {
         .set('Cookie', [`token=${customerToken}`]);
 
       expect(res.statusCode).toEqual(500);
-      expect(res.body).toEqual({ message: 'Server Error' });
+      expect(res.body).toEqual({ message: 'Database error', stack: expect.any(String) });
     });
   });
 });

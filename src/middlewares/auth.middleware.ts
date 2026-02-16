@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
-import { verifyAuthToken, findUserById } from '../services/auth.service';
-import { IUser } from '../../../types/user-types';
+import { verifyAuthToken, findUserById } from '../api/v1/services/auth.service';
+import { IUser } from '../types/user-types';
 
 // Extend the Request type to include a user property
 declare global {

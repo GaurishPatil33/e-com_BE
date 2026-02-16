@@ -1,6 +1,6 @@
 import { supabase } from '../../../config/db';
 import { PostgrestResponse, PostgrestSingleResponse } from '@supabase/supabase-js';
-import { IUser } from '../../../types/user-types'; // Assuming this interface is still relevant for type checking
+import { IUser } from '../../../types/user-types';
 
 // Define the table name
 const TABLE_NAME = 'users';
@@ -23,6 +23,22 @@ export class UserModel {
       throw error;
     }
     return data;
+  }
+
+  /**
+   * Finds all users.
+   * @returns A Promise that resolves to an array of user data.
+   */
+  static async findAll(): Promise<IUser[]> {
+    const { data, error }: PostgrestResponse<IUser> = await supabase
+      .from(TABLE_NAME)
+      .select('*');
+
+    if (error) {
+      console.error('Error finding all users:', error);
+      throw error;
+    }
+    return data || [];
   }
 
   /**

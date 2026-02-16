@@ -2,11 +2,9 @@ import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import { UserModel } from '../models/user.model';
 import { IUser } from '../../../types/user-types';
-import dotenv from 'dotenv';
+import env from '../../../config/env';
 
-dotenv.config();
-
-const JWT_SECRET = process.env.JWT_SECRET || 'supersecretjwtkey'; // Fallback for development
+const JWT_SECRET = env.JWT_SECRET;
 
 export const register = async (userData: Omit<IUser, 'id' | 'createdAt' | 'updatedAt' | 'address' | 'role'> & { password: string }): Promise<IUser> => {
     const { password, ...rest } = userData;

@@ -85,7 +85,7 @@ describe('Post API', () => {
       const res = await request(app).get('/api/v1/posts');
 
       expect(res.statusCode).toEqual(500);
-      expect(res.body).toEqual({ message: 'Server Error' });
+      expect(res.body).toEqual({ message: 'Database error', stack: expect.any(String) });
     });
   });
 
@@ -139,7 +139,7 @@ describe('Post API', () => {
         .send(newPostInput);
 
       expect(res.statusCode).toEqual(500);
-      expect(res.body).toEqual({ message: 'Server Error' });
+      expect(res.body).toEqual({ message: 'Database error', stack: expect.any(String) });
     });
   });
 
@@ -176,7 +176,7 @@ describe('Post API', () => {
       const res = await request(app).get('/api/v1/posts/someid');
 
       expect(res.statusCode).toEqual(500);
-      expect(res.body).toEqual({ message: 'Server Error' });
+      expect(res.body).toEqual({ message: 'Database error', stack: expect.any(String) });
     });
   });
 
@@ -232,7 +232,7 @@ describe('Post API', () => {
         .send({ title: 'New Title' });
 
       expect(res.statusCode).toEqual(500);
-      expect(res.body).toEqual({ message: 'Server Error' });
+      expect(res.body).toEqual({ message: 'Database error', stack: expect.any(String) });
     });
   });
 
@@ -275,7 +275,7 @@ describe('Post API', () => {
         .set('Cookie', [`token=${adminToken}`]);
 
       expect(res.statusCode).toEqual(500);
-      expect(res.body).toEqual({ message: 'Server Error' });
+      expect(res.body).toEqual({ message: 'Database error', stack: expect.any(String) });
     });
   });
 });

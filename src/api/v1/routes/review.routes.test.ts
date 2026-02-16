@@ -87,7 +87,7 @@ describe('Review API', () => {
       const res = await request(app).get('/api/v1/reviews');
 
       expect(res.statusCode).toEqual(500);
-      expect(res.body).toEqual({ message: 'Server Error' });
+      expect(res.body).toEqual({ message: 'Database error', stack: expect.any(String) });
     });
   });
 
@@ -148,7 +148,7 @@ describe('Review API', () => {
         .send(newReviewInput);
 
       expect(res.statusCode).toEqual(500);
-      expect(res.body).toEqual({ message: 'Server Error' });
+      expect(res.body).toEqual({ message: 'Database error', stack: expect.any(String) });
     });
   });
 
@@ -190,7 +190,7 @@ describe('Review API', () => {
         .set('Cookie', [`token=${customerToken}`]);
 
       expect(res.statusCode).toEqual(500);
-      expect(res.body).toEqual({ message: 'Server Error' });
+      expect(res.body).toEqual({ message: 'Database error', stack: expect.any(String) });
     });
   });
 
@@ -224,7 +224,7 @@ describe('Review API', () => {
       const res = await request(app).get(`/api/v1/reviews/product/${productId}`);
 
       expect(res.statusCode).toEqual(500);
-      expect(res.body).toEqual({ message: 'Server Error' });
+      expect(res.body).toEqual({ message: 'Database error', stack: expect.any(String) });
     });
   });
 
@@ -263,7 +263,7 @@ describe('Review API', () => {
       const res = await request(app).get('/api/v1/reviews/someid');
 
       expect(res.statusCode).toEqual(500);
-      expect(res.body).toEqual({ message: 'Server Error' });
+      expect(res.body).toEqual({ message: 'Database error', stack: expect.any(String) });
     });
   });
 
@@ -322,7 +322,7 @@ describe('Review API', () => {
         .send({ comment: 'New comment' });
 
       expect(res.statusCode).toEqual(500);
-      expect(res.body).toEqual({ message: 'Server Error' });
+      expect(res.body).toEqual({ message: 'Database error', stack: expect.any(String) });
     });
   });
 
@@ -365,7 +365,7 @@ describe('Review API', () => {
         .set('Cookie', [`token=${customerToken}`]);
 
       expect(res.statusCode).toEqual(500);
-      expect(res.body).toEqual({ message: 'Server Error' });
+      expect(res.body).toEqual({ message: 'Database error', stack: expect.any(String) });
     });
   });
 });

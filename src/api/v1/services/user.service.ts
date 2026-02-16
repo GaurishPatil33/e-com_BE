@@ -2,6 +2,10 @@ import { UserModel } from '../models/user.model';
 import { IUser } from '../../../types/user-types';
 
 export class UserService {
+  static async findAllUsers(): Promise<IUser[]> {
+    return UserModel.findAll();
+  }
+
   static async getUserById(id: string): Promise<IUser | null> {
     return UserModel.findById(id);
   }

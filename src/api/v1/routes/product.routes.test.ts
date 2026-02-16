@@ -32,7 +32,7 @@ describe('Product API', () => {
       const res = await request(app).get('/api/v1/products');
 
       expect(res.statusCode).toEqual(500);
-      expect(res.body).toEqual({ message: 'Server Error' });
+      expect(res.body).toEqual({ message: 'Database error', stack: expect.any(String) });
       expect(mockedProductService.findAllProducts).toHaveBeenCalledTimes(1);
     });
   });
@@ -65,7 +65,7 @@ describe('Product API', () => {
       const res = await request(app).get('/api/v1/products/123');
 
       expect(res.statusCode).toEqual(500);
-      expect(res.body).toEqual({ message: 'Server Error' });
+      expect(res.body).toEqual({ message: 'Database error', stack: expect.any(String) });
       expect(mockedProductService.findProductById).toHaveBeenCalledWith('123');
     });
   });
@@ -94,7 +94,7 @@ describe('Product API', () => {
         .send(newProductData);
 
       expect(res.statusCode).toEqual(500);
-      expect(res.body).toEqual({ message: 'Server Error' });
+      expect(res.body).toEqual({ message: 'Database error', stack: expect.any(String) });
       expect(mockedProductService.createProduct).toHaveBeenCalledWith(newProductData);
     });
   });
@@ -139,7 +139,7 @@ describe('Product API', () => {
         .send(updateData);
 
       expect(res.statusCode).toEqual(500);
-      expect(res.body).toEqual({ message: 'Server Error' });
+      expect(res.body).toEqual({ message: 'Database error', stack: expect.any(String) });
       expect(mockedProductService.updateProduct).toHaveBeenCalledWith(productId, updateData);
     });
   });
@@ -174,7 +174,7 @@ describe('Product API', () => {
       const res = await request(app).delete(`/api/v1/products/${productId}`);
 
       expect(res.statusCode).toEqual(500);
-      expect(res.body).toEqual({ message: 'Server Error' });
+      expect(res.body).toEqual({ message: 'Database error', stack: expect.any(String) });
       expect(mockedProductService.deleteProduct).toHaveBeenCalledWith(productId);
     });
   });
