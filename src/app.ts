@@ -8,6 +8,10 @@ import swaggerSpec from './config/swagger';
 
 // routes
 import productRoutes from './api/v1/routes/product.routes';
+import authRoutes from './api/v1/routes/auth.routes';
+import orderRoutes from './api/v1/routes/order.routes';
+import paymentRoutes from './api/v1/routes/payment.routes';
+import addressRoutes from './api/v1/routes/address.routes';
 
 
 const app: Application = express();
@@ -42,5 +46,9 @@ app.get('/', (req: Request, res: Response) => {
 });
 
 app.use('/api/v1/products', productRoutes);
+app.use('/api/v1/auth', authRoutes);
+app.use('/api/v1/orders', orderRoutes);
+app.use('/api/v1/payments', paymentRoutes);
+app.use('/api/v1/addresses', addressRoutes);
 
 export default app;

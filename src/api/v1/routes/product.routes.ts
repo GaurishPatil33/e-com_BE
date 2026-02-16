@@ -1,5 +1,6 @@
 import { Router } from 'express';
 import { getAllProducts, getProductById, createProduct, updateProduct, deleteProduct } from '../controllers/product.controller';
+import { asyncHandler } from '../middlewares/asyncHandler';
 
 const router = Router();
 
@@ -173,8 +174,8 @@ const router = Router();
  *         description: Server error
  */
 router.route('/')
-    .get(getAllProducts)
-    .post(createProduct);
+    .get(asyncHandler(getAllProducts))
+    .post(asyncHandler(createProduct));
 
 /**
  * @swagger
@@ -246,8 +247,8 @@ router.route('/')
  *         description: Server error
  */
 router.route('/:id')
-    .get(getProductById)
-    .put(updateProduct)
-    .delete(deleteProduct);
+    .get(asyncHandler(getProductById))
+    .put(asyncHandler(updateProduct))
+    .delete(asyncHandler(deleteProduct));
 
 export default router;
