@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import { getAddressById, getAddressesByUserId, createAddress, updateAddress, deleteAddress } from '../controllers/address.controller';
-import { authenticate } from '../middlewares/auth.middleware';
-import { asyncHandler } from '../middlewares/asyncHandler';
+import { authenticate } from '../../../middlewares/auth.middleware';
+import { asyncHandler } from '../../../middlewares/asyncHandler';
 
 const router = Router();
 

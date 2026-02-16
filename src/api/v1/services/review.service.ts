@@ -1,32 +1,30 @@
 import { ReviewModel } from '../models/review.model';
 import { IReview } from '../../../types/review-types';
 
-export class ReviewService {
-  static async getAllReviews(): Promise<IReview[]> {
-    return ReviewModel.findAll();
-  }
+export const findAllReviews = async (): Promise<IReview[]> => {
+    return await ReviewModel.findAll();
+};
 
-  static async getReviewById(id: string): Promise<IReview | null> {
-    return ReviewModel.findById(id);
-  }
+export const findReviewById = async (id: string): Promise<IReview | null> => {
+    return await ReviewModel.findById(id);
+};
 
-  static async getReviewsByUserId(userId: string): Promise<IReview[]> {
-    return ReviewModel.findByUserId(userId);
-  }
+export const findReviewsByUserId = async (userId: string): Promise<IReview[]> => {
+    return await ReviewModel.findByUserId(userId);
+};
 
-  static async getReviewsByProductId(productId: string): Promise<IReview[]> {
-    return ReviewModel.findByProductId(productId);
-  }
+export const findReviewsByProductId = async (productId: string): Promise<IReview[]> => {
+    return await ReviewModel.findByProductId(productId);
+};
 
-  static async createReview(reviewData: Omit<IReview, 'id' | 'createdAt' | 'updatedAt'>): Promise<IReview> {
-    return ReviewModel.create(reviewData);
-  }
+export const createReview = async (reviewData: Omit<IReview, 'id' | 'createdAt' | 'updatedAt'>): Promise<IReview> => {
+    return await ReviewModel.create(reviewData);
+};
 
-  static async updateReview(id: string, updates: Partial<Omit<IReview, 'id' | 'createdAt' | 'updatedAt'>>): Promise<IReview | null> {
-    return ReviewModel.update(id, updates);
-  }
+export const updateReview = async (id: string, updates: Partial<Omit<IReview, 'id' | 'createdAt' | 'updatedAt'>>): Promise<IReview | null> => {
+    return await ReviewModel.update(id, updates);
+};
 
-  static async deleteReview(id: string): Promise<boolean> {
-    return ReviewModel.delete(id);
-  }
-}
+export const deleteReview = async (id: string): Promise<boolean> => {
+    return await ReviewModel.delete(id);
+};

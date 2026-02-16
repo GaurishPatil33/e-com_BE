@@ -1,28 +1,26 @@
 import { CategoryModel } from '../models/category.model';
 import { ICategory } from '../../../types/category-types';
 
-export class CategoryService {
-  static async getAllCategories(): Promise<ICategory[]> {
-    return CategoryModel.findAll();
-  }
+export const findAllCategories = async (): Promise<ICategory[]> => {
+    return await CategoryModel.findAll();
+};
 
-  static async getCategoryById(id: string): Promise<ICategory | null> {
-    return CategoryModel.findById(id);
-  }
+export const findCategoryById = async (id: string): Promise<ICategory | null> => {
+    return await CategoryModel.findById(id);
+};
 
-  static async getCategoryBySlug(slug: string): Promise<ICategory | null> {
-    return CategoryModel.findBySlug(slug);
-  }
+export const findCategoryBySlug = async (slug: string): Promise<ICategory | null> => {
+    return await CategoryModel.findBySlug(slug);
+};
 
-  static async createCategory(categoryData: Omit<ICategory, 'id' | 'createdAt' | 'updatedAt'>): Promise<ICategory> {
-    return CategoryModel.create(categoryData);
-  }
+export const createCategory = async (categoryData: Omit<ICategory, 'id' | 'createdAt' | 'updatedAt'>): Promise<ICategory> => {
+    return await CategoryModel.create(categoryData);
+};
 
-  static async updateCategory(id: string, updates: Partial<Omit<ICategory, 'id' | 'createdAt' | 'updatedAt'>>): Promise<ICategory | null> {
-    return CategoryModel.update(id, updates);
-  }
+export const updateCategory = async (id: string, updates: Partial<Omit<ICategory, 'id' | 'createdAt' | 'updatedAt'>>): Promise<ICategory | null> => {
+    return await CategoryModel.update(id, updates);
+};
 
-  static async deleteCategory(id: string): Promise<boolean> {
-    return CategoryModel.delete(id);
-  }
-}
+export const deleteCategory = async (id: string): Promise<boolean> => {
+    return await CategoryModel.delete(id);
+};

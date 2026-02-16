@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { getAllOrders, getOrderById, getOrdersByUserId, createOrder, updateOrder, deleteOrder } from '../controllers/order.controller';
+import { getAllShipments, getShipmentById, getShipmentsByOrderId, getShipmentsByUserId, createShipment, updateShipment } from '../controllers/shipment.controller';
 import { authenticate } from '../../../middlewares/auth.middleware';
 import { asyncHandler } from '../../../middlewares/asyncHandler';
 
@@ -8,44 +8,44 @@ const router = Router();
 /**
  * @swagger
  * tags:
- *   name: Orders
- *   description: Order management
+ *   name: Shipments
+ *   description: Shipment management and tracking
  */
 
 /**
  * @swagger
  * components:
  *   schemas:
- *     Order:
+ *     Shipment:
  *       type: object
  *       required:
+ *         - orderId
  *         - userId
- *         - items
+ *         - trackingNumber
+ *         - status
+ *         - carrier
  *         - shippingAddress
- *         - paymentStatus
- *         - orderStatus
- *         - totalAmount
+ *         - estimatedDelivery
  *       properties:
  *         id:
  *           type: string
- *           description: The auto-generated ID of the order
+ *           description: The auto-generated ID of the shipment
+ *         orderId:
+ *           type: string
+ *           description: The ID of the associated order
  *         userId:
  *           type: string
- *           description: The ID of the user who placed the order
- *         items:
- *           type: array
- *           items:
- *             type: object
- *             properties:
- *               productId:
- *                 type: string
- *               title:
- *                 type: string
- *               quantity:
- *                 type: number
- *               priceAtPurchase:
- *                 type: number
- *           description: List of products in the order
+ *           description: The ID of the user who owns this shipment
+ *         trackingNumber:
+ *           type: string
+ *           description: The tracking number for the shipment
+ *         status:
+ *           type: string
+ *           enum: [pending, shipped, in_transit, out_for_delivery, delivered, failed, returned]
+ *           description: Current status of the shipment
+ *         carrier:
+ *           type: string
+ *           description: The shipping carrier (e.g., FedEx, UPS)
  *         shippingAddress:
  *           type: object
  *           properties:
@@ -64,52 +64,44 @@ const router = Router();
  *             country:
  *               type: string
  *           description: Shipping address details
- *         paymentStatus:
+ *         estimatedDelivery:
  *           type: string
- *           enum: [pending, paid, failed]
- *           description: Current payment status of the order
- *         orderStatus:
- *           type: string
- *           enum: [processing, shipped, delivered, cancelled]
- *           description: Current fulfillment status of the order
- *         totalAmount:
- *           type: number
- *           format: float
- *           description: Total amount of the order
+ *           format: date-time
+ *           description: Estimated delivery date and time
  *         createdAt:
  *           type: string
  *           format: date-time
- *           description: The date and time the order was created
+ *           description: The date and time the shipment was created
  *         updatedAt:
  *           type: string
  *           format: date-time
- *           description: The date and time the order was last updated
+ *           description: The date and time the shipment was last updated
  */
 
 /**
  * @swagger
- * /api/v1/orders:
+ * /api/v1/shipments:
  *   get:
- *     summary: Get all orders (Admin only)
- *     tags: [Orders]
+ *     summary: Get all shipments (Admin only)
+ *     tags: [Shipments]
  *     security:
  *       - cookieAuth: []
  *     responses:
  *       200:
- *         description: A list of orders.
+ *         description: A list of shipments.
  *         content:
  *           application/json:
  *             schema:
  *               type: array
  *               items:
- *                 $ref: '#/components/schemas/Order'
+ *                 $ref: '#/components/schemas/Shipment'
  *       401:
  *         description: Unauthorized
  *       500:
  *         description: Server error
  *   post:
- *     summary: Create a new order
- *     tags: [Orders]
+ *     summary: Create a new shipment (Admin only)
+ *     tags: [Shipments]
  *     security:
  *       - cookieAuth: []
  *     requestBody:
@@ -119,23 +111,18 @@ const router = Router();
  *           schema:
  *             type: object
  *             required:
- *               - items
+ *               - orderId
+ *               - trackingNumber
+ *               - carrier
  *               - shippingAddress
- *               - totalAmount
+ *               - estimatedDelivery
  *             properties:
- *               items:
- *                 type: array
- *                 items:
- *                   type: object
- *                   properties:
- *                     productId:
- *                       type: string
- *                     title:
- *                       type: string
- *                     quantity:
- *                       type: number
- *                     priceAtPurchase:
- *                       type: number
+ *               orderId:
+ *                 type: string
+ *               trackingNumber:
+ *                 type: string
+ *               carrier:
+ *                 type: string
  *               shippingAddress:
  *                 type: object
  *                 properties:
@@ -153,79 +140,86 @@ const router = Router();
  *                     type: string
  *                   country:
  *                     type: string
- *               totalAmount:
- *                 type: number
+ *               estimatedDelivery:
+ *                 type: string
+ *                 format: date-time
  *     responses:
  *       201:
- *         description: The created order.
+ *         description: The created shipment.
  *         content:
  *           application/json:
  *             schema:
- *               $ref: '#/components/schemas/Order'
+ *               $ref: '#/components/schemas/Shipment'
  *       401:
  *         description: Unauthorized
  *       500:
  *         description: Server error
  */
 router.route('/')
-    .get(asyncHandler(authenticate), asyncHandler(getAllOrders)) // Admin only, requires authentication
-    .post(asyncHandler(authenticate), asyncHandler(createOrder)); // Requires authentication
+    .get(asyncHandler(authenticate), asyncHandler(getAllShipments)) // Admin only
+    .post(asyncHandler(authenticate), asyncHandler(createShipment)); // Admin only
 
 /**
  * @swagger
- * /api/v1/orders/user:
+ * /api/v1/shipments/user:
  *   get:
- *     summary: Get orders for the authenticated user
- *     tags: [Orders]
+ *     summary: Get shipments for the authenticated user
+ *     tags: [Shipments]
  *     security:
  *       - cookieAuth: []
  *     responses:
  *       200:
- *         description: A list of orders for the current user.
+ *         description: A list of shipments for the current user.
  *         content:
  *           application/json:
  *             schema:
  *               type: array
  *               items:
- *                 $ref: '#/components/schemas/Order'
+ *                 $ref: '#/components/schemas/Shipment'
  *       401:
  *         description: Unauthorized
  *       500:
  *         description: Server error
  */
-router.get('/user', asyncHandler(authenticate), asyncHandler(getOrdersByUserId));
+router.get('/user', asyncHandler(authenticate), asyncHandler(getShipmentsByUserId));
 
 /**
  * @swagger
- * /api/v1/orders/{id}:
+ * /api/v1/shipments/order/{orderId}:
  *   get:
- *     summary: Get an order by ID
- *     tags: [Orders]
+ *     summary: Get shipments by Order ID
+ *     tags: [Shipments]
  *     security:
  *       - cookieAuth: []
  *     parameters:
  *       - in: path
- *         name: id
+ *         name: orderId
  *         schema:
  *           type: string
  *         required: true
- *         description: The order ID
+ *         description: The Order ID
  *     responses:
  *       200:
- *         description: A single order.
+ *         description: A list of shipments for the given order.
  *         content:
  *           application/json:
  *             schema:
- *               $ref: '#/components/schemas/Order'
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/Shipment'
  *       401:
  *         description: Unauthorized
- *       404:
- *         description: Order not found
  *       500:
  *         description: Server error
- *   put:
- *     summary: Update an order by ID (Admin only)
- *     tags: [Orders]
+ */
+router.get('/order/:orderId', asyncHandler(authenticate), asyncHandler(getShipmentsByOrderId));
+
+/**
+ * @swagger
+ * /api/v1/shipments/{id}:
+ *   get:
+ *     summary: Get a shipment by ID
+ *     tags: [Shipments]
  *     security:
  *       - cookieAuth: []
  *     parameters:
@@ -234,51 +228,54 @@ router.get('/user', asyncHandler(authenticate), asyncHandler(getOrdersByUserId))
  *         schema:
  *           type: string
  *         required: true
- *         description: The order ID
+ *         description: The shipment ID
+ *     responses:
+ *       200:
+ *         description: A single shipment.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Shipment'
+ *       401:
+ *         description: Unauthorized
+ *       404:
+ *         description: Shipment not found
+ *       500:
+ *         description: Server error
+ *   put:
+ *     summary: Update a shipment by ID (Admin only)
+ *     tags: [Shipments]
+ *     security:
+ *       - cookieAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: The shipment ID
  *     requestBody:
  *       required: true
  *       content:
  *         application/json:
  *           schema:
- *             $ref: '#/components/schemas/Order'
+ *             $ref: '#/components/schemas/Shipment'
  *     responses:
  *       200:
- *         description: The updated order.
+ *         description: The updated shipment.
  *         content:
  *           application/json:
  *             schema:
- *               $ref: '#/components/schemas/Order'
+ *               $ref: '#/components/schemas/Shipment'
  *       401:
  *         description: Unauthorized
  *       404:
- *         description: Order not found
- *       500:
- *         description: Server error
- *   delete:
- *     summary: Delete an order by ID (Admin only)
- *     tags: [Orders]
- *     security:
- *       - cookieAuth: []
- *     parameters:
- *       - in: path
- *         name: id
- *         schema:
- *           type: string
- *         required: true
- *         description: The order ID
- *     responses:
- *       204:
- *         description: Order deleted successfully
- *       401:
- *         description: Unauthorized
- *       404:
- *         description: Order not found
+ *         description: Shipment not found
  *       500:
  *         description: Server error
  */
 router.route('/:id')
-    .get(asyncHandler(authenticate), asyncHandler(getOrderById))
-    .put(asyncHandler(authenticate), asyncHandler(updateOrder)) // Admin only
-    .delete(asyncHandler(authenticate), asyncHandler(deleteOrder)); // Admin only
+    .get(asyncHandler(authenticate), asyncHandler(getShipmentById))
+    .put(asyncHandler(authenticate), asyncHandler(updateShipment)); // Admin only
 
 export default router;

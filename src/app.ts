@@ -12,6 +12,10 @@ import authRoutes from './api/v1/routes/auth.routes';
 import orderRoutes from './api/v1/routes/order.routes';
 import paymentRoutes from './api/v1/routes/payment.routes';
 import addressRoutes from './api/v1/routes/address.routes';
+import categoryRoutes from './api/v1/routes/category.routes';
+import reviewRoutes from './api/v1/routes/review.routes';
+import postRoutes from './api/v1/routes/post.routes';
+import shipmentRoutes from './api/v1/routes/shipment.routes';
 
 
 const app: Application = express();
@@ -50,5 +54,9 @@ app.use('/api/v1/auth', authRoutes);
 app.use('/api/v1/orders', orderRoutes);
 app.use('/api/v1/payments', paymentRoutes);
 app.use('/api/v1/addresses', addressRoutes);
+app.use('/api/v1/categories', categoryRoutes);
+app.use('/api/v1/reviews', reviewRoutes);
+app.use('/api/v1/posts', postRoutes);
+app.use('/api/v1/shipments', shipmentRoutes);
 
 export default app;

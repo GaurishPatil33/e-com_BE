@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import { getAllProducts, getProductById, createProduct, updateProduct, deleteProduct } from '../controllers/product.controller';
-import { asyncHandler } from '../middlewares/asyncHandler';
+import { asyncHandler } from '../../../middlewares/asyncHandler';
 
 const router = Router();
 

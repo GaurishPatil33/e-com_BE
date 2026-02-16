@@ -1,24 +1,22 @@
 import { PostModel } from '../models/post.model';
 import { IPost } from '../../../types/post-types';
 
-export class PostService {
-  static async getAllPosts(): Promise<IPost[]> {
-    return PostModel.findAll();
-  }
+export const findAllPosts = async (): Promise<IPost[]> => {
+    return await PostModel.findAll();
+};
 
-  static async getPostById(id: string): Promise<IPost | null> {
-    return PostModel.findById(id);
-  }
+export const findPostById = async (id: string): Promise<IPost | null> => {
+    return await PostModel.findById(id);
+};
 
-  static async createPost(postData: Omit<IPost, 'id' | 'createdAt' | 'updatedAt'>): Promise<IPost> {
-    return PostModel.create(postData);
-  }
+export const createPost = async (postData: Omit<IPost, 'id' | 'createdAt' | 'updatedAt'>): Promise<IPost> => {
+    return await PostModel.create(postData);
+};
 
-  static async updatePost(id: string, updates: Partial<Omit<IPost, 'id' | 'createdAt' | 'updatedAt'>>): Promise<IPost | null> {
-    return PostModel.update(id, updates);
-  }
+export const updatePost = async (id: string, updates: Partial<Omit<IPost, 'id' | 'createdAt' | 'updatedAt'>>): Promise<IPost | null> => {
+    return await PostModel.update(id, updates);
+};
 
-  static async deletePost(id: string): Promise<boolean> {
-    return PostModel.delete(id);
-  }
-}
+export const deletePost = async (id: string): Promise<boolean> => {
+    return await PostModel.delete(id);
+};

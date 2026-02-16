@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import { getAllPayments, getPaymentById, getPaymentsByOrderId, createPayment, updatePayment } from '../controllers/payment.controller';
-import { authenticate } from '../middlewares/auth.middleware';
-import { asyncHandler } from '../middlewares/asyncHandler';
+import { authenticate } from '../../../middlewares/auth.middleware';
+import { asyncHandler } from '../../../middlewares/asyncHandler';
 
 const router = Router();
 
