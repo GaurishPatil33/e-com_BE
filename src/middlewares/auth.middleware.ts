@@ -33,6 +33,6 @@ export const authenticate = async (req: Request, res: Response, next: NextFuncti
         next();
     } catch (error) {
         console.error('Auth middleware error:', error);
-        res.status(500).json({ message: 'Server Error' });
+        next(error);
     }
 };

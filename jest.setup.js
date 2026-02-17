@@ -1,6 +1,11 @@
 // jest.setup.js
 require('dotenv').config({ path: '.env.test' });
 
+if (process.env.NODE_ENV === 'test') {
+  jest.spyOn(console, 'error').mockImplementation(() => {});
+  jest.spyOn(console, 'debug').mockImplementation(() => {});
+}
+
 jest.mock('./src/config/db', () => ({
   supabase: {
     from: jest.fn(() => ({

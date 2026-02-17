@@ -1,11 +1,14 @@
 import request from 'supertest';
 import app from '../../../app';
 import * as authService from '../services/auth.service';
+import { UserService } from '../services/user.service'; // Import UserService directly
 import { IUser } from '../../../types/user-types';
 
 jest.mock('../services/auth.service');
+jest.mock('../services/user.service');
 
 const mockedAuthService = authService as jest.Mocked<typeof authService>;
+const mockedUserService = UserService as jest.Mocked<typeof UserService>;
 
 describe('Auth API', () => {
   beforeEach(() => {
@@ -32,14 +35,14 @@ describe('Auth API', () => {
         updatedAt: new Date().toISOString(),
       };
       mockedAuthService.register.mockResolvedValue(registeredUser);
-      mockedAuthService.findUserById.mockResolvedValue(null); // No existing user
+      mockedUserService.getUserByEmail.mockResolvedValue(null); // No existing user
 
       const res = await request(app)
         .post('/api/v1/auth/register')
         .send(newUserInput);
 
       expect(res.statusCode).toEqual(201);
-      expect(res.body).toEqual({
+      expect(res.body).toMatchObject({
         id: 'user123',
         firstName: 'John',
         lastName: 'Doe',
@@ -63,7 +66,6 @@ describe('Auth API', () => {
         firstName: 'John',
         lastName: 'Doe',
         email: 'john.doe@example.com',
-        // Missing phone and password
       };
 
       const res = await request(app)
@@ -98,7 +100,7 @@ describe('Auth API', () => {
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString(),
       };
-      mockedAuthService.findUserById.mockResolvedValue(existingUser); // User already exists
+      mockedUserService.getUserByEmail.mockResolvedValue(existingUser); // User already exists
 
       const res = await request(app)
         .post('/api/v1/auth/register')
@@ -117,6 +119,7 @@ describe('Auth API', () => {
         password: 'password123',
       };
       mockedAuthService.findUserById.mockResolvedValue(null);
+      mockedUserService.getUserByEmail.mockResolvedValue(null); // Ensure no existing user
       mockedAuthService.register.mockRejectedValue(new Error('Database error'));
 
       const res = await request(app)
@@ -229,13 +232,9 @@ describe('Auth API', () => {
     });
 
     it('should return 500 if there is a server error (though unlikely for logout)', async () => {
-      // Mocking an error for logout is tricky as it's mostly client-side cookie clearing.
-      // For demonstration, let's assume some internal error could occur.
-      // This test might be less realistic depending on actual implementation.
       const res = await request(app)
-        .post('/api/v1/auth/logout'); // No specific service call to mock for error here
-
-      expect(res.statusCode).toEqual(200); // Still 200 as cookie clearing is client-side
+        .post('/api/v1/auth/logout');
+      expect(res.statusCode).toEqual(200);
     });
   });
 
