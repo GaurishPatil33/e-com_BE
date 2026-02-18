@@ -10,6 +10,12 @@ const env = cleanEnv(process.env, {
   SUPABASE_URL: str(),
   JWT_SECRET: str({ default: 'test-jwt-secret' }),
   SUPABASE_ANON_KEY: str({ default: 'test-supabase-anon-key' }),
+  REDIS_URL: str(),
+  RAZORPAY_KEY_ID: str(),
+  RAZORPAY_KEY_SECRET: str(),
+  SHIPROCKET_EMAIL: str(),
+  SHIPROCKET_PASSWORD: str(),
+  SHIPROCKET_BASE_URL: str(),
 });
 
 export default env;

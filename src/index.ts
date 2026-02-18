@@ -1,6 +1,6 @@
 import app from './app';
 import http from 'http';
-import { PORT } from './config';
+
 import { connectRedis } from './config/redis';
 import env from './config/env';
 

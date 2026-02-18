@@ -21,6 +21,8 @@ import userRoutes from './api/v1/routes/user.routes';
 // middlewares
 import { errorHandler } from './middlewares/error.middleware';
 
+import { API_VERSION } from './utils/constants';
+
 
 const app: Application = express();
 
@@ -53,16 +55,16 @@ app.get('/', (req: Request, res: Response) => {
     res.send('Hello World!');
 });
 
-app.use('/api/v1/products', productRoutes);
-app.use('/api/v1/auth', authRoutes);
-app.use('/api/v1/orders', orderRoutes);
-app.use('/api/v1/payments', paymentRoutes);
-app.use('/api/v1/addresses', addressRoutes);
-app.use('/api/v1/categories', categoryRoutes);
-app.use('/api/v1/reviews', reviewRoutes);
-app.use('/api/v1/posts', postRoutes);
-app.use('/api/v1/shipments', shipmentRoutes);
-app.use('/api/v1/users', userRoutes);
+app.use(`${API_VERSION}/products`, productRoutes);
+app.use(`${API_VERSION}/auth`, authRoutes);
+app.use(`${API_VERSION}/orders`, orderRoutes);
+app.use(`${API_VERSION}/payments`, paymentRoutes);
+app.use(`${API_VERSION}/addresses`, addressRoutes);
+app.use(`${API_VERSION}/categories`, categoryRoutes);
+app.use(`${API_VERSION}/reviews`, reviewRoutes);
+app.use(`${API_VERSION}/posts`, postRoutes);
+app.use(`${API_VERSION}/shipments`, shipmentRoutes);
+app.use(`${API_VERSION}/users`, userRoutes);
 
 app.use(errorHandler);
 
