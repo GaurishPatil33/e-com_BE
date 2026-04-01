@@ -10,15 +10,19 @@ export class ProductModel {
    * @returns A Promise that resolves to an array of product data.
    */
   static async findAll(): Promise<IProduct[]> {
-    const { data, error }: PostgrestResponse<IProduct> = await supabase
+    const { data, error }: PostgrestResponse<IProduct & { product_categories: { category_id: string }[] }> = await supabase
       .from(TABLE_NAME)
-      .select('*');
+      .select('*, product_categories(category_id)');
 
     if (error) {
       console.error('Error finding all products:', error);
       throw error;
     }
-    return data || [];
+
+    return (data || []).map(product => ({
+      ...product,
+      category_ids: product.product_categories.map(pc => pc.category_id),
+    }));
   }
 
   /**
@@ -27,9 +31,9 @@ export class ProductModel {
    * @returns A Promise that resolves to the product data or null if not found.
    */
   static async findById(id: string): Promise<IProduct | null> {
-    const { data, error }: PostgrestSingleResponse<IProduct> = await supabase
+    const { data, error }: PostgrestSingleResponse<IProduct & { product_categories: { category_id: string }[] }> = await supabase
       .from(TABLE_NAME)
-      .select('*')
+      .select('*, product_categories(category_id)')
       .eq('id', id)
       .single();
 
@@ -37,7 +41,15 @@ export class ProductModel {
       console.error('Error finding product by ID:', error);
       throw error;
     }
-    return data;
+
+    if (!data) {
+      return null;
+    }
+
+    return {
+      ...data,
+      category_ids: data.product_categories.map(pc => pc.category_id),
+    };
   }
 
   /**
@@ -46,16 +58,20 @@ export class ProductModel {
    * @returns A Promise that resolves to an array of product data.
    */
   static async findByCategoryId(categoryId: string): Promise<IProduct[]> {
-    const { data, error }: PostgrestResponse<IProduct> = await supabase
-      .from(TABLE_NAME)
-      .select('*')
-      .contains('category', [categoryId]); // Assuming 'category' is a JSONB array in Supabase
+    const { data, error }: PostgrestResponse<IProduct & { product_categories: { category_id: string }[] }> = await supabase
+      .from('product_categories')
+      .select('product_id, products(*, product_categories(category_id))')
+      .eq('category_id', categoryId);
 
     if (error) {
       console.error('Error finding products by category ID:', error);
       throw error;
     }
-    return data || [];
+
+    return (data || []).map((item: any) => ({
+      ...item.products,
+      category_ids: item.products.product_categories.map((pc: any) => pc.category_id),
+    }));
   }
 
   /**
@@ -63,18 +79,37 @@ export class ProductModel {
    * @param productData The product data to create.
    * @returns A Promise that resolves to the created product data.
    */
-  static async create(productData: Omit<IProduct, 'id' | 'createdAt' | 'updatedAt'>): Promise<IProduct> {
-    const { data, error }: PostgrestSingleResponse<IProduct> = await supabase
+  static async create(productData: Omit<IProduct, 'id' | 'created_at' | 'updated_at' | 'category_ids'> & { category_ids?: string[] }): Promise<IProduct> {
+    const { category_ids, ...productDetails } = productData;
+
+    const { data: newProduct, error: productError }: PostgrestSingleResponse<IProduct> = await supabase
       .from(TABLE_NAME)
-      .insert([productData])
+      .insert([productDetails])
       .select()
       .single();
 
-    if (error) {
-      console.error('Error creating product:', error);
-      throw error;
+    if (productError) {
+      console.error('Error creating product:', productError);
+      throw productError;
     }
-    return data as IProduct;
+
+    if (category_ids && category_ids.length > 0) {
+      const productCategories = category_ids.map(categoryId => ({
+        product_id: newProduct.id,
+        category_id: categoryId,
+      }));
+      const { error: categoriesError } = await supabase
+        .from('product_categories')
+        .insert(productCategories);
+
+      if (categoriesError) {
+        console.error('Error inserting product categories:', categoriesError);
+        // Decide how to handle this error: rollback product creation or just log
+        // For now, we'll just log and proceed, but a transaction might be better
+      }
+    }
+
+    return { ...newProduct, category_ids: category_ids || [] } as IProduct;
   }
 
   /**
@@ -83,19 +118,56 @@ export class ProductModel {
    * @param updates The fields to update.
    * @returns A Promise that resolves to the updated product data or null if not found.
    */
-  static async update(id: string, updates: Partial<Omit<IProduct, 'id' | 'createdAt' | 'updatedAt'>>): Promise<IProduct | null> {
-    const { data, error }: PostgrestSingleResponse<IProduct> = await supabase
+  static async update(id: string, updates: Partial<Omit<IProduct, 'id' | 'created_at' | 'updated_at' | 'category_ids'>> & { category_ids?: string[] }): Promise<IProduct | null> {
+    const { category_ids, ...productDetails } = updates;
+
+    const { data: updatedProduct, error: productError }: PostgrestSingleResponse<IProduct> = await supabase
       .from(TABLE_NAME)
-      .update(updates)
+      .update(productDetails)
       .eq('id', id)
       .select()
       .single();
 
-    if (error && error.code !== 'PGRST116') {
-      console.error('Error updating product:', error);
-      throw error;
+    if (productError && productError.code !== 'PGRST116') {
+      console.error('Error updating product:', productError);
+      throw productError;
     }
-    return data;
+
+    if (!updatedProduct) {
+      return null;
+    }
+
+    if (category_ids !== undefined) {
+      // Delete existing product categories
+      const { error: deleteError } = await supabase
+        .from('product_categories')
+        .delete()
+        .eq('product_id', id);
+
+      if (deleteError) {
+        console.error('Error deleting existing product categories:', deleteError);
+        throw deleteError;
+      }
+
+      // Insert new product categories if provided
+      if (category_ids.length > 0) {
+        const productCategories = category_ids.map(categoryId => ({
+          product_id: id,
+          category_id: categoryId,
+        }));
+        const { error: insertError } = await supabase
+          .from('product_categories')
+          .insert(productCategories);
+
+        if (insertError) {
+          console.error('Error inserting new product categories:', insertError);
+          throw insertError;
+        }
+      }
+    }
+
+    // Re-fetch the product with updated categories to ensure consistency
+    return this.findById(id);
   }
 
   /**

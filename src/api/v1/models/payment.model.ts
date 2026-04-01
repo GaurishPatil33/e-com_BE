@@ -49,7 +49,7 @@ export class PaymentModel {
     const { data, error }: PostgrestResponse<IPayment> = await supabase
       .from(TABLE_NAME)
       .select('*')
-      .eq('orderId', orderId);
+      .eq('order_id', orderId);
 
     if (error) {
       console.error('Error finding payments by order ID:', error);
@@ -59,11 +59,30 @@ export class PaymentModel {
   }
 
   /**
+   * Finds a payment by its Razorpay Order ID.
+   * @param razorpayOrderId The Razorpay Order ID.
+   * @returns A Promise that resolves to the payment data or null if not found.
+   */
+  static async findByRazorpayOrderId(razorpayOrderId: string): Promise<IPayment | null> {
+    const { data, error }: PostgrestSingleResponse<IPayment> = await supabase
+      .from(TABLE_NAME)
+      .select('*')
+      .eq('razorpay_order_id', razorpayOrderId)
+      .single();
+
+    if (error && error.code !== 'PGRST116') {
+      console.error('Error finding payment by Razorpay Order ID:', error);
+      throw error;
+    }
+    return data;
+  }
+
+  /**
    * Creates a new payment.
    * @param paymentData The payment data to create.
    * @returns A Promise that resolves to the created payment data.
    */
-  static async create(paymentData: Omit<IPayment, 'id' | 'createdAt' | 'updatedAt'>): Promise<IPayment> {
+  static async create(paymentData: Omit<IPayment, 'id' | 'created_at' | 'updated_at'>): Promise<IPayment> {
     const { data, error }: PostgrestSingleResponse<IPayment> = await supabase
       .from(TABLE_NAME)
       .insert([paymentData])
@@ -83,7 +102,7 @@ export class PaymentModel {
    * @param updates The fields to update.
    * @returns A Promise that resolves to the updated payment data or null if not found.
    */
-  static async update(id: string, updates: Partial<Omit<IPayment, 'id' | 'createdAt' | 'updatedAt'>>): Promise<IPayment | null> {
+  static async update(id: string, updates: Partial<Omit<IPayment, 'id' | 'created_at' | 'updated_at'>>): Promise<IPayment | null> {
     const { data, error }: PostgrestSingleResponse<IPayment> = await supabase
       .from(TABLE_NAME)
       .update(updates)

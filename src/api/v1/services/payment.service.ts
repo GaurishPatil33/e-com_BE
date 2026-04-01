@@ -1,5 +1,6 @@
 import { PaymentModel } from '../models/payment.model';
 import { IPayment } from '../../../types/payment-types';
+import { razorpayInstance } from '../../../config/razorpay';
 
 export const findAllPayments = async (): Promise<IPayment[]> => {
     return await PaymentModel.findAll();
@@ -13,8 +14,21 @@ export const findPaymentsByOrderId = async (orderId: string): Promise<IPayment[]
     return await PaymentModel.findByOrderId(orderId);
 };
 
-export const createPayment = async (paymentData: Omit<IPayment, 'id' | 'createdAt' | 'updatedAt'>): Promise<IPayment> => {
-    return await PaymentModel.create(paymentData);
+export const createPayment = async (paymentData: Omit<IPayment, 'id' | 'createdAt' | 'updatedAt'>): Promise<IPayment & { razorpayOrder: any }> => {
+    const options = {
+        amount: paymentData.amount * 100,  // amount in the smallest currency unit
+        currency: paymentData.currency,
+        receipt: paymentData.orderId // Using orderId as receipt for now
+    };
+
+    const razorpayOrder = await razorpayInstance.orders.create(options);
+
+    const payment = await PaymentModel.create({
+        ...paymentData,
+        razorpayOrderId: razorpayOrder.id // Save the Razorpay Order ID
+    });
+
+    return { ...payment, razorpayOrder };
 };
 
 export const updatePayment = async (id: string, updates: Partial<Omit<IPayment, 'id' | 'createdAt' | 'updatedAt'>>): Promise<IPayment | null> => {

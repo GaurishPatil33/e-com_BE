@@ -49,7 +49,7 @@ export class OrderModel {
     const { data, error }: PostgrestResponse<IOrder> = await supabase
       .from(TABLE_NAME)
       .select('*')
-      .eq('userId', userId);
+      .eq('user_id', userId);
 
     if (error) {
       console.error('Error finding orders by user ID:', error);
@@ -63,7 +63,7 @@ export class OrderModel {
    * @param orderData The order data to create.
    * @returns A Promise that resolves to the created order data.
    */
-  static async create(orderData: Omit<IOrder, 'id' | 'createdAt' | 'updatedAt'>): Promise<IOrder> {
+  static async create(orderData: Omit<IOrder, 'id' | 'created_at' | 'updated_at'>): Promise<IOrder> {
     const { data, error }: PostgrestSingleResponse<IOrder> = await supabase
       .from(TABLE_NAME)
       .insert([orderData])
@@ -83,7 +83,7 @@ export class OrderModel {
    * @param updates The fields to update.
    * @returns A Promise that resolves to the updated order data or null if not found.
    */
-  static async update(id: string, updates: Partial<Omit<IOrder, 'id' | 'createdAt' | 'updatedAt'>>): Promise<IOrder | null> {
+  static async update(id: string, updates: Partial<Omit<IOrder, 'id' | 'created_at' | 'updated_at'>>): Promise<IOrder | null> {
     const { data, error }: PostgrestSingleResponse<IOrder> = await supabase
       .from(TABLE_NAME)
       .update(updates)

@@ -16,11 +16,43 @@ const router = Router();
  * @swagger
  * components:
  *   schemas:
+ *     IRazorpayOrder:
+ *       type: object
+ *       properties:
+ *         amount:
+ *           type: number
+ *         amount_due:
+ *           type: number
+ *         amount_paid:
+ *           type: number
+ *         attempts:
+ *           type: number
+ *         created_at:
+ *           type: number
+ *           description: Unix timestamp
+ *         currency:
+ *           type: string
+ *         entity:
+ *           type: string
+ *         id:
+ *           type: string
+ *           description: Razorpay Order ID
+ *         notes:
+ *           type: array
+ *           items:
+ *             type: string
+ *         offer_id:
+ *           type: string
+ *           nullable: true
+ *         receipt:
+ *           type: string
+ *         status:
+ *           type: string
  *     Payment:
  *       type: object
  *       required:
- *         - orderId
- *         - userId
+ *         - order_id
+ *         - user_id
  *         - amount
  *         - currency
  *         - status
@@ -29,10 +61,10 @@ const router = Router();
  *         id:
  *           type: string
  *           description: The auto-generated ID of the payment
- *         orderId:
+ *         order_id:
  *           type: string
  *           description: The ID of the associated order
- *         userId:
+ *         user_id:
  *           type: string
  *           description: The ID of the user making the payment
  *         amount:
@@ -49,17 +81,22 @@ const router = Router();
  *         method:
  *           type: string
  *           description: Payment method used (e.g., credit_card, paypal)
- *         transactionId:
+ *         transaction_id:
  *           type: string
  *           description: Transaction ID from the payment gateway
- *         paymentGateway:
+ *         payment_gateway:
  *           type: string
  *           description: Name of the payment gateway (e.g., Razorpay, Stripe)
- *         createdAt:
+ *         razorpay_order_id:
+ *           type: string
+ *           description: Razorpay Order ID
+ *         razorpay_order:
+ *           $ref: '#/components/schemas/IRazorpayOrder'
+ *         created_at:
  *           type: string
  *           format: date-time
  *           description: The date and time the payment was created
- *         updatedAt:
+ *         updated_at:
  *           type: string
  *           format: date-time
  *           description: The date and time the payment was last updated
@@ -98,11 +135,11 @@ const router = Router();
  *           schema:
  *             type: object
  *             required:
- *               - orderId
+ *               - order_id
  *               - amount
  *               - method
  *             properties:
- *               orderId:
+ *               order_id:
  *                 type: string
  *               amount:
  *                 type: number

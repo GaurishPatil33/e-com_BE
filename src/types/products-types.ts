@@ -4,7 +4,7 @@ export interface IProduct {
     brand?: string;
     price: number;
     discountPercentage?: number;
-    category: string[];
+    category_ids: string[];
     description?: string;
     stock?: number;
     rating?: number;
@@ -14,6 +14,6 @@ export interface IProduct {
         public_id: string;
         type: "image" | "video" | "youtube";
     }[];
-    createdAt: string;
-    updatedAt: string;
+    created_at: string;
+    updated_at: string;
 }

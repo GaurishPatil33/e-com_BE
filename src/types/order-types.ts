@@ -1,25 +1,25 @@
 export interface IOrder {
     id: string; 
-    userId: string;
+    user_id: string;
     items: {
-        productId: string; 
+        product_id: string; 
         title: string;
         quantity: number;
-        priceAtPurchase: number;
+        price_at_purchase: number;
     }[];
-    shippingAddress: {
-        fullName: string;
+    shipping_address: {
+        full_name: string;
         phone: string;
         street: string;
         city: string;
         state: string;
-        postalCode: string;
+        postal_code: string;
         country: string;
     };
-    paymentStatus: "pending" | "paid" | "failed";
-    paymentId?: string;
-    orderStatus: "processing" | "shipped" | "delivered" | "cancelled";
-    totalAmount: number;
-    createdAt: string;
-    updatedAt: string;
+    payment_status: "pending" | "paid" | "failed";
+    payment_id?: string;
+    order_status: "processing" | "shipped" | "delivered" | "cancelled";
+    total_amount: number;
+    created_at: string;
+    updated_at: string;
 }

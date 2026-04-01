@@ -19,17 +19,17 @@ const router = Router();
  *     Order:
  *       type: object
  *       required:
- *         - userId
+ *         - user_id
  *         - items
- *         - shippingAddress
- *         - paymentStatus
- *         - orderStatus
- *         - totalAmount
+ *         - shipping_address
+ *         - payment_status
+ *         - order_status
+ *         - total_amount
  *       properties:
  *         id:
  *           type: string
  *           description: The auto-generated ID of the order
- *         userId:
+ *         user_id:
  *           type: string
  *           description: The ID of the user who placed the order
  *         items:
@@ -37,19 +37,19 @@ const router = Router();
  *           items:
  *             type: object
  *             properties:
- *               productId:
+ *               product_id:
  *                 type: string
  *               title:
  *                 type: string
  *               quantity:
  *                 type: number
- *               priceAtPurchase:
+ *               price_at_purchase:
  *                 type: number
  *           description: List of products in the order
- *         shippingAddress:
+ *         shipping_address:
  *           type: object
  *           properties:
- *             fullName:
+ *             full_name:
  *               type: string
  *             phone:
  *               type: string
@@ -59,28 +59,31 @@ const router = Router();
  *               type: string
  *             state:
  *               type: string
- *             postalCode:
+ *             postal_code:
  *               type: string
  *             country:
  *               type: string
  *           description: Shipping address details
- *         paymentStatus:
+ *         payment_status:
  *           type: string
  *           enum: [pending, paid, failed]
  *           description: Current payment status of the order
- *         orderStatus:
+ *         payment_id:
+ *           type: string
+ *           description: The ID of the associated payment
+ *         order_status:
  *           type: string
  *           enum: [processing, shipped, delivered, cancelled]
  *           description: Current fulfillment status of the order
- *         totalAmount:
+ *         total_amount:
  *           type: number
  *           format: float
  *           description: Total amount of the order
- *         createdAt:
+ *         created_at:
  *           type: string
  *           format: date-time
  *           description: The date and time the order was created
- *         updatedAt:
+ *         updated_at:
  *           type: string
  *           format: date-time
  *           description: The date and time the order was last updated
@@ -128,18 +131,18 @@ const router = Router();
  *                 items:
  *                   type: object
  *                   properties:
- *                     productId:
+ *                     product_id:
  *                       type: string
  *                     title:
  *                       type: string
  *                     quantity:
  *                       type: number
- *                     priceAtPurchase:
+ *                     price_at_purchase:
  *                       type: number
- *               shippingAddress:
+ *               shipping_address:
  *                 type: object
  *                 properties:
- *                   fullName:
+ *                   full_name:
  *                     type: string
  *                   phone:
  *                     type: string
@@ -149,11 +152,11 @@ const router = Router();
  *                     type: string
  *                   state:
  *                     type: string
- *                   postalCode:
+ *                   postal_code:
  *                     type: string
  *                   country:
  *                     type: string
- *               totalAmount:
+ *               total_amount:
  *                 type: number
  *     responses:
  *       201:

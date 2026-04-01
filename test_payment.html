@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Razorpay Checkout</title>
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+</head>
+<body>
+    <button id="rzp-button1">Pay with Razorpay</button>
+
+    <script>
+        var options = {
+            "key": "rzp_test_SY8DHK0bla5DXL",
+            "amount": "10000", // 10000 paise = ₹100
+            "currency": "INR",
+            "name": "Acme Corp",
+            "description": "Test Transaction",
+            "order_id": "order_SYEOrGOkCQQ6RV",
+
+            "handler": function (response) {
+                alert(response.razorpay_payment_id);
+                alert(response.razorpay_order_id);
+                alert(response.razorpay_signature);
+            },
+
+            "prefill": {
+                "name": "John Doe",
+                "email": "john.doe@example.com",
+                "contact": "9999999999"
+            },
+
+            "notes": {
+                "address": "Razorpay Corporate Office"
+            },
+
+            "theme": {
+                "color": "#3399cc"
+            }
+        };
+
+        var rzp1 = new Razorpay(options);
+
+        document.getElementById('rzp-button1').onclick = function (e) {
+            rzp1.open();
+            e.preventDefault();
+        };
+    </script>
+</body>
+</html>

@@ -35,11 +35,11 @@ export const createOrder = async (req: Request, res: Response) => {
         return res.status(401).json({ message: 'Unauthorized' });
     }
 
-    const orderData: Omit<IOrder, 'id' | 'createdAt' | 'updatedAt'> = {
+    const orderData: Omit<IOrder, 'id' | 'created_at' | 'updated_at'> = {
         ...req.body,
-        userId: userId,
-        paymentStatus: 'pending', // Default status
-        orderStatus: 'processing', // Default status
+        user_id: userId,
+        payment_status: 'pending', // Default status
+        order_status: 'processing', // Default status
     };
 
     const newOrder = await orderService.createOrder(orderData);

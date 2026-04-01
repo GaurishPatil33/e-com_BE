@@ -29,9 +29,9 @@ export const createPayment = async (req: Request, res: Response) => {
         return res.status(401).json({ message: 'Unauthorized' });
     }
 
-    const paymentData: Omit<IPayment, 'id' | 'createdAt' | 'updatedAt'> = {
+    const paymentData: Omit<IPayment, 'id' | 'created_at' | 'updated_at'> = {
         ...req.body,
-        userId: userId,
+        user_id: userId,
         status: 'pending',
         currency: req.body.currency || 'INR',
     };
