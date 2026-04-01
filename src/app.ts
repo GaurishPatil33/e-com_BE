@@ -17,6 +17,7 @@ import reviewRoutes from './api/v1/routes/review.routes';
 import postRoutes from './api/v1/routes/post.routes';
 import shipmentRoutes from './api/v1/routes/shipment.routes';
 import userRoutes from './api/v1/routes/user.routes';
+import webhookRoutes from './api/v1/routes/webhook.routes';
 
 // middlewares
 import { errorHandler } from './middlewares/error.middleware';
@@ -37,6 +38,8 @@ app.use(express.urlencoded({ extended: true, limit: '16kb' }));
 app.use(express.static('public'));
 app.use(cookieParser());
 
+app.set('trust proxy', 1); // trust first proxy
+
 const limiter = rateLimit({
 	windowMs: 15 * 60 * 1000, // 15 minutes
 	limit: 100, // Limit each IP to 100 requests per `window` (here, per 15 minutes).
@@ -49,6 +52,8 @@ app.use(limiter);
 
 // Swagger UI
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+
+app.use('/webhook', webhookRoutes);
 
 // Routes
 app.get('/', (req: Request, res: Response) => {

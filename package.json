@@ -6,7 +6,8 @@
   "scripts": {
     "test": "jest",
     "dev": "ts-node-dev --respawn --transpile-only src/index.ts",
-    "start": "node build/index.js"
+    "start": "node build/index.js",
+    "seed": "ts-node src/utils/seed.ts"
   },
   "keywords": [],
   "author": "",

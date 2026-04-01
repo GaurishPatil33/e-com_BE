@@ -17,6 +17,7 @@ export interface IOrder {
         country: string;
     };
     paymentStatus: "pending" | "paid" | "failed";
+    paymentId?: string;
     orderStatus: "processing" | "shipped" | "delivered" | "cancelled";
     totalAmount: number;
     createdAt: string;
