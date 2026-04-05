@@ -14,23 +14,23 @@ export const findPaymentsByOrderId = async (orderId: string): Promise<IPayment[]
     return await PaymentModel.findByOrderId(orderId);
 };
 
-export const createPayment = async (paymentData: Omit<IPayment, 'id' | 'createdAt' | 'updatedAt'>): Promise<IPayment & { razorpayOrder: any }> => {
+export const createPayment = async (paymentData: Omit<IPayment, 'id' | 'created_at' | 'updated_at'>): Promise<IPayment & { razorpay_order: any }> => {
     const options = {
         amount: paymentData.amount * 100,  // amount in the smallest currency unit
         currency: paymentData.currency,
-        receipt: paymentData.orderId // Using orderId as receipt for now
+        receipt: paymentData.order_id // Using orderId as receipt for now
     };
 
     const razorpayOrder = await razorpayInstance.orders.create(options);
 
     const payment = await PaymentModel.create({
         ...paymentData,
-        razorpayOrderId: razorpayOrder.id // Save the Razorpay Order ID
+        razorpay_order_id: razorpayOrder.id // Save the Razorpay Order ID
     });
 
-    return { ...payment, razorpayOrder };
+    return { ...payment, razorpay_order: razorpayOrder };
 };
 
-export const updatePayment = async (id: string, updates: Partial<Omit<IPayment, 'id' | 'createdAt' | 'updatedAt'>>): Promise<IPayment | null> => {
+export const updatePayment = async (id: string, updates: Partial<Omit<IPayment, 'id' | 'created_at' | 'updated_at'>>): Promise<IPayment | null> => {
     return await PaymentModel.update(id, updates);
 };

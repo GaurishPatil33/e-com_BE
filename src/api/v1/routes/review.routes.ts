@@ -19,18 +19,18 @@ const router = Router();
  *     Review:
  *       type: object
  *       required:
- *         - user
- *         - product
+ *         - user_id
+ *         - product_id
  *         - rating
  *         - comment
  *       properties:
  *         id:
  *           type: string
  *           description: The auto-generated ID of the review
- *         user:
+ *         user_id:
  *           type: string
  *           description: The ID of the user who wrote the review
- *         product:
+ *         product_id:
  *           type: string
  *           description: The ID of the product being reviewed
  *         rating:
@@ -41,11 +41,11 @@ const router = Router();
  *         comment:
  *           type: string
  *           description: The text content of the review
- *         createdAt:
+ *         created_at:
  *           type: string
  *           format: date-time
  *           description: The date and time the review was created
- *         updatedAt:
+ *         updated_at:
  *           type: string
  *           format: date-time
  *           description: The date and time the review was last updated
@@ -80,11 +80,11 @@ const router = Router();
  *           schema:
  *             type: object
  *             required:
- *               - product
+ *               - product_id
  *               - rating
  *               - comment
  *             properties:
- *               product:
+ *               product_id:
  *                 type: string
  *               rating:
  *                 type: number

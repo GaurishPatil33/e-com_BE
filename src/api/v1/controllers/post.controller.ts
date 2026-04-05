@@ -16,7 +16,7 @@ export const getPostById = async (req: Request, res: Response) => {
 };
 
 export const createPost = async (req: Request, res: Response) => {
-    const postData: Omit<IPost, 'id' | 'createdAt' | 'updatedAt'> = req.body;
+    const postData: Omit<IPost, 'id' | 'created_at' | 'updated_at'> = req.body;
     const newPost = await postService.createPost(postData);
     res.status(201).json(newPost);
 };

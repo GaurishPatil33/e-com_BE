@@ -49,7 +49,7 @@ export class ReviewModel {
     const { data, error }: PostgrestResponse<IReview> = await supabase
       .from(TABLE_NAME)
       .select('*')
-      .eq('user', userId);
+      .eq('user_id', userId);
 
     if (error) {
       console.error('Error finding reviews by user ID:', error);
@@ -67,7 +67,7 @@ export class ReviewModel {
     const { data, error }: PostgrestResponse<IReview> = await supabase
       .from(TABLE_NAME)
       .select('*')
-      .eq('product', productId);
+      .eq('product_id', productId);
 
     if (error) {
       console.error('Error finding reviews by product ID:', error);
@@ -81,7 +81,7 @@ export class ReviewModel {
    * @param reviewData The review data to create.
    * @returns A Promise that resolves to the created review data.
    */
-  static async create(reviewData: Omit<IReview, 'id' | 'createdAt' | 'updatedAt'>): Promise<IReview> {
+  static async create(reviewData: Omit<IReview, 'id' | 'created_at' | 'updated_at'>): Promise<IReview> {
     const { data, error }: PostgrestSingleResponse<IReview> = await supabase
       .from(TABLE_NAME)
       .insert([reviewData])
@@ -101,7 +101,7 @@ export class ReviewModel {
    * @param updates The fields to update.
    * @returns A Promise that resolves to the updated review data or null if not found.
    */
-  static async update(id: string, updates: Partial<Omit<IReview, 'id' | 'createdAt' | 'updatedAt'>>): Promise<IReview | null> {
+  static async update(id: string, updates: Partial<Omit<IReview, 'id' | 'created_at' | 'updated_at'>>): Promise<IReview | null> {
     const { data, error }: PostgrestSingleResponse<IReview> = await supabase
       .from(TABLE_NAME)
       .update(updates)

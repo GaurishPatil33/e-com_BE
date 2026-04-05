@@ -22,23 +22,25 @@ describe('Post API', () => {
   beforeAll(() => {
     adminUser = {
       id: 'admin123',
-      firstName: 'Admin',
-      lastName: 'User',
+      first_name: 'Admin',
+      last_name: 'User',
       email: 'admin@example.com',
       phone: '1112223333',
+      password: 'hashedpassword', // Made optional in IUser, but tests might still provide it
       role: 'admin',
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString(),
     };
     customerUser = {
       id: 'customer123',
-      firstName: 'Customer',
-      lastName: 'User',
+      first_name: 'Customer',
+      last_name: 'User',
       email: 'customer@example.com',
       phone: '4445556666',
+      password: 'hashedpassword', // Made optional in IUser, but tests might still provide it
       role: 'customer',
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString(),
     };
     adminToken = 'mock-admin-token';
     customerToken = 'mock-customer-token';
@@ -66,8 +68,9 @@ describe('Post API', () => {
           id: 'post1',
           title: 'First Post',
           content: 'This is the content of the first post.',
-          createdAt: new Date().toISOString(),
-          updatedAt: new Date().toISOString(),
+          author_id: adminUser.id, // Added author_id
+          created_at: new Date().toISOString(),
+          updated_at: new Date().toISOString(),
         },
       ];
       mockedPostService.findAllPosts.mockResolvedValue(mockPosts);
@@ -97,8 +100,9 @@ describe('Post API', () => {
       };
       const createdPost: IPost = {
         id: 'post2',
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString(),
+        author_id: adminUser.id, // Added author_id
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString(),
         ...newPostInput,
       };
       mockedPostService.createPost.mockResolvedValue(createdPost);
@@ -147,10 +151,11 @@ describe('Post API', () => {
     it('should return a post by ID', async () => {
       const mockPost: IPost = {
         id: 'post3',
-        title: 'Third Post',
-        content: 'Content of the third post.',
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString(),
+          title: 'Third Post',
+          content: 'Content of the third post.',
+          author_id: adminUser.id, // Added author_id
+          created_at: new Date().toISOString(),
+          updated_at: new Date().toISOString(),
       };
       mockedPostService.findPostById.mockResolvedValue(mockPost);
 
@@ -186,8 +191,9 @@ describe('Post API', () => {
       const updateData = { title: 'Updated Title', content: 'Updated content.' };
       const updatedPost: IPost = {
         id: postId,
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString(),
+        author_id: adminUser.id, // Added author_id
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString(),
         ...updateData,
       };
       mockedPostService.updatePost.mockResolvedValue(updatedPost);

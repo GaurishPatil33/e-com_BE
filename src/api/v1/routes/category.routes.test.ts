@@ -12,47 +12,49 @@ const mockedCategoryService = categoryService as jest.Mocked<typeof categoryServ
 const mockedAuthService = authService as jest.Mocked<typeof authService>;
 
 describe('Category API', () => {
-  let adminUser: IUser;
-  let customerUser: IUser;
-  let adminToken: string;
-  let customerToken: string;
+  let admin_user: IUser;
+  let customer_user: IUser;
+  let admin_token: string;
+  let customer_token: string;
 
   beforeAll(() => {
-    adminUser = {
+    admin_user = {
       id: 'admin123',
-      firstName: 'Admin',
-      lastName: 'User',
+      first_name: 'Admin',
+      last_name: 'User',
       email: 'admin@example.com',
       phone: '1112223333',
+      password: 'hashedpassword',
       role: 'admin',
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString(),
     };
-    customerUser = {
+    customer_user = {
       id: 'customer123',
-      firstName: 'Customer',
-      lastName: 'User',
+      first_name: 'Customer',
+      last_name: 'User',
       email: 'customer@example.com',
       phone: '4445556666',
+      password: 'hashedpassword',
       role: 'customer',
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString(),
     };
-    adminToken = 'mock-admin-token';
-    customerToken = 'mock-customer-token';
+    admin_token = 'mock-admin-token';
+    customer_token = 'mock-customer-token';
   });
 
   beforeEach(() => {
     jest.clearAllMocks();
     // Default mocks for authentication
     mockedAuthService.verifyAuthToken.mockImplementation((token: string) => {
-      if (token === adminToken) return { id: adminUser.id };
-      if (token === customerToken) return { id: customerUser.id };
+      if (token === admin_token) return { id: admin_user.id };
+      if (token === customer_token) return { id: customer_user.id };
       return null;
     });
     mockedAuthService.findUserById.mockImplementation((id: string) => {
-      if (id === adminUser.id) return Promise.resolve(adminUser);
-      if (id === customerUser.id) return Promise.resolve(customerUser);
+      if (id === admin_user.id) return Promise.resolve(admin_user);
+      if (id === customer_user.id) return Promise.resolve(customer_user);
       return Promise.resolve(null);
     });
   });
@@ -65,10 +67,10 @@ describe('Category API', () => {
           name: 'Electronics',
           slug: 'electronics',
           media: [],
-          parentId: null,
-          isActive: true,
-          createdAt: new Date().toISOString(),
-          updatedAt: new Date().toISOString(),
+          parent_id: null,
+          is_active: true,
+          created_at: new Date().toISOString(),
+          updated_at: new Date().toISOString(),
         },
       ];
       mockedCategoryService.findAllCategories.mockResolvedValue(mockCategories);
@@ -100,16 +102,17 @@ describe('Category API', () => {
       };
       const createdCategory: ICategory = {
         id: 'cat2',
-        parentId: null,
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString(),
+        parent_id: null,
+        is_active: newCategoryInput.isActive ? newCategoryInput.isActive : true,
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString(),
         ...newCategoryInput,
       };
       mockedCategoryService.createCategory.mockResolvedValue(createdCategory);
 
       const res = await request(app)
         .post('/api/v1/categories')
-        .set('Cookie', [`token=${adminToken}`])
+        .set('Cookie', [`token=${admin_token}`])
         .send(newCategoryInput);
 
       expect(res.statusCode).toEqual(201);
@@ -143,7 +146,7 @@ describe('Category API', () => {
 
       const res = await request(app)
         .post('/api/v1/categories')
-        .set('Cookie', [`token=${adminToken}`])
+        .set('Cookie', [`token=${admin_token}`])
         .send(newCategoryInput);
 
       expect(res.statusCode).toEqual(500);
@@ -158,10 +161,10 @@ describe('Category API', () => {
         name: 'Clothing',
         slug: 'clothing',
         media: [],
-        parentId: null,
-        isActive: true,
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString(),
+        parent_id: null,
+        is_active: true,
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString(),
       };
       mockedCategoryService.findCategoryById.mockResolvedValue(mockCategory);
 
@@ -200,16 +203,16 @@ describe('Category API', () => {
         name: 'Updated Clothing',
         slug: 'clothing',
         media: [],
-        parentId: null,
-        isActive: false,
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString(),
+        parent_id: null,
+        is_active: false,
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString(),
       };
       mockedCategoryService.updateCategory.mockResolvedValue(updatedCategory);
 
       const res = await request(app)
         .put(`/api/v1/categories/${categoryId}`)
-        .set('Cookie', [`token=${adminToken}`])
+        .set('Cookie', [`token=${admin_token}`])
         .send(updateData);
 
       expect(res.statusCode).toEqual(200);
@@ -222,7 +225,7 @@ describe('Category API', () => {
 
       const res = await request(app)
         .put('/api/v1/categories/nonexistent')
-        .set('Cookie', [`token=${adminToken}`])
+        .set('Cookie', [`token=${admin_token}`])
         .send({ name: 'New Name' });
 
       expect(res.statusCode).toEqual(404);
@@ -245,7 +248,7 @@ describe('Category API', () => {
 
       const res = await request(app)
         .put('/api/v1/categories/someid')
-        .set('Cookie', [`token=${adminToken}`])
+        .set('Cookie', [`token=${admin_token}`])
         .send({ name: 'New Name' });
 
       expect(res.statusCode).toEqual(500);
@@ -260,7 +263,7 @@ describe('Category API', () => {
 
       const res = await request(app)
         .delete(`/api/v1/categories/${categoryId}`)
-        .set('Cookie', [`token=${adminToken}`]);
+        .set('Cookie', [`token=${admin_token}`]);
 
       expect(res.statusCode).toEqual(204);
       expect(res.body).toEqual({});
@@ -272,7 +275,7 @@ describe('Category API', () => {
 
       const res = await request(app)
         .delete('/api/v1/categories/nonexistent')
-        .set('Cookie', [`token=${adminToken}`]);
+        .set('Cookie', [`token=${admin_token}`]);
 
       expect(res.statusCode).toEqual(404);
       expect(res.body).toEqual({ message: 'Category not found or could not be deleted' });
@@ -289,7 +292,7 @@ describe('Category API', () => {
 
       const res = await request(app)
         .delete('/api/v1/categories/someid')
-        .set('Cookie', [`token=${adminToken}`]);
+        .set('Cookie', [`token=${admin_token}`]);
 
       expect(res.statusCode).toEqual(500);
       expect(res.body).toEqual({ message: 'Database error', stack: expect.any(String) });
@@ -303,10 +306,10 @@ describe('Category API', () => {
         name: 'Home & Kitchen',
         slug: 'home-kitchen',
         media: [],
-        parentId: null,
-        isActive: true,
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString(),
+        parent_id: null,
+        is_active: true,
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString(),
       };
       mockedCategoryService.findCategoryBySlug.mockResolvedValue(mockCategory);
 

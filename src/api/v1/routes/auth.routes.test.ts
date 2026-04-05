@@ -18,21 +18,22 @@ describe('Auth API', () => {
   describe('POST /api/v1/auth/register', () => {
     it('should register a new user', async () => {
       const newUserInput = {
-        firstName: 'John',
-        lastName: 'Doe',
+        first_name: 'John',
+        last_name: 'Doe',
         email: 'john.doe@example.com',
         phone: '1234567890',
         password: 'password123',
       };
       const registeredUser: IUser = {
         id: 'user123',
-        firstName: 'John',
-        lastName: 'Doe',
+        first_name: 'John',
+        last_name: 'Doe',
         email: 'john.doe@example.com',
         phone: '1234567890',
+        password: 'hashedpassword',
         role: 'customer',
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString(),
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString(),
       };
       mockedAuthService.register.mockResolvedValue(registeredUser);
       mockedUserService.getUserByEmail.mockResolvedValue(null); // No existing user
@@ -44,17 +45,17 @@ describe('Auth API', () => {
       expect(res.statusCode).toEqual(201);
       expect(res.body).toMatchObject({
         id: 'user123',
-        firstName: 'John',
-        lastName: 'Doe',
+        first_name: 'John',
+        last_name: 'Doe',
         email: 'john.doe@example.com',
         phone: '1234567890',
         role: 'customer',
-        createdAt: expect.any(String),
-        updatedAt: expect.any(String),
+        created_at: expect.any(String),
+        updated_at: expect.any(String),
       });
       expect(mockedAuthService.register).toHaveBeenCalledWith(expect.objectContaining({
-        firstName: 'John',
-        lastName: 'Doe',
+        first_name: 'John',
+        last_name: 'Doe',
         email: 'john.doe@example.com',
         phone: '1234567890',
         password: 'password123',
@@ -63,8 +64,8 @@ describe('Auth API', () => {
 
     it('should return 400 if required fields are missing', async () => {
       const newUserInput = {
-        firstName: 'John',
-        lastName: 'Doe',
+        first_name: 'John',
+        last_name: 'Doe',
         email: 'john.doe@example.com',
       };
 
@@ -84,21 +85,22 @@ describe('Auth API', () => {
 
     it('should return 409 if user with email already exists', async () => {
       const newUserInput = {
-        firstName: 'John',
-        lastName: 'Doe',
+        first_name: 'John',
+        last_name: 'Doe',
         email: 'john.doe@example.com',
         phone: '1234567890',
         password: 'password123',
       };
       const existingUser: IUser = {
         id: 'user123',
-        firstName: 'John',
-        lastName: 'Doe',
+        first_name: 'John',
+        last_name: 'Doe',
         email: 'john.doe@example.com',
         phone: '1234567890',
+        password: 'hashedpassword',
         role: 'customer',
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString(),
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString(),
       };
       mockedUserService.getUserByEmail.mockResolvedValue(existingUser); // User already exists
 
@@ -112,8 +114,8 @@ describe('Auth API', () => {
 
     it('should return 500 if there is a server error', async () => {
       const newUserInput = {
-        firstName: 'John',
-        lastName: 'Doe',
+        first_name: 'John',
+        last_name: 'Doe',
         email: 'john.doe@example.com',
         phone: '1234567890',
         password: 'password123',
@@ -139,13 +141,14 @@ describe('Auth API', () => {
       };
       const user: IUser = {
         id: 'user123',
-        firstName: 'John',
-        lastName: 'Doe',
+        first_name: 'John',
+        last_name: 'Doe',
         email: 'john.doe@example.com',
         phone: '1234567890',
+        password: 'hashedpassword',
         role: 'customer',
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString(),
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString(),
       };
       const token = 'mock-jwt-token';
       mockedAuthService.login.mockResolvedValue({ user, token });
@@ -158,13 +161,13 @@ describe('Auth API', () => {
       expect(res.body).toEqual({
         user: {
           id: 'user123',
-          firstName: 'John',
-          lastName: 'Doe',
+          first_name: 'John',
+          last_name: 'Doe',
           email: 'john.doe@example.com',
           phone: '1234567890',
           role: 'customer',
-          createdAt: expect.any(String),
-          updatedAt: expect.any(String),
+          created_at: expect.any(String),
+          updated_at: expect.any(String),
         },
         token: token,
       });
@@ -242,13 +245,14 @@ describe('Auth API', () => {
     it('should return the current authenticated user', async () => {
       const user: IUser = {
         id: 'user123',
-        firstName: 'Jane',
-        lastName: 'Doe',
+        first_name: 'Jane',
+        last_name: 'Doe',
         email: 'jane.doe@example.com',
         phone: '0987654321',
+        password: 'hashedpassword',
         role: 'customer',
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString(),
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString(),
       };
       const token = 'valid-jwt-token';
 
@@ -265,13 +269,13 @@ describe('Auth API', () => {
       expect(res.statusCode).toEqual(200);
       expect(res.body).toEqual({
         id: 'user123',
-        firstName: 'Jane',
-        lastName: 'Doe',
+        first_name: 'Jane',
+        last_name: 'Doe',
         email: 'jane.doe@example.com',
         phone: '0987654321',
         role: 'customer',
-        createdAt: expect.any(String),
-        updatedAt: expect.any(String),
+        created_at: expect.any(String),
+        updated_at: expect.any(String),
       });
       expect(mockedAuthService.verifyAuthToken).toHaveBeenCalledWith(token);
       expect(mockedAuthService.findUserById).toHaveBeenCalledWith(user.id);

@@ -9,11 +9,11 @@ export const findPostById = async (id: string): Promise<IPost | null> => {
     return await PostModel.findById(id);
 };
 
-export const createPost = async (postData: Omit<IPost, 'id' | 'createdAt' | 'updatedAt'>): Promise<IPost> => {
+export const createPost = async (postData: Omit<IPost, 'id' | 'created_at' | 'updated_at'>): Promise<IPost> => {
     return await PostModel.create(postData);
 };
 
-export const updatePost = async (id: string, updates: Partial<Omit<IPost, 'id' | 'createdAt' | 'updatedAt'>>): Promise<IPost | null> => {
+export const updatePost = async (id: string, updates: Partial<Omit<IPost, 'id' | 'created_at' | 'updated_at'>>): Promise<IPost | null> => {
     return await PostModel.update(id, updates);
 };
 

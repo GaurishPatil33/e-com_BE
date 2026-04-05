@@ -24,10 +24,7 @@ export const getCategoryBySlug = async (req: Request, res: Response) => {
 };
 
 export const createCategory = async (req: Request, res: Response) => {
-    const categoryData: Omit<ICategory, 'id' | 'createdAt' | 'updatedAt'> = {
-        ...req.body,
-        isActive: req.body.isActive !== undefined ? req.body.isActive : true, // Default to active
-    };
+    const categoryData: Omit<ICategory, 'id' | 'created_at' | 'updated_at'> = req.body;
     const newCategory = await categoryService.createCategory(categoryData);
     res.status(201).json(newCategory);
 };

@@ -6,7 +6,7 @@ import env from '../../../config/env';
 
 const JWT_SECRET = env.JWT_SECRET;
 
-export const register = async (userData: Omit<IUser, 'id' | 'createdAt' | 'updatedAt' | 'address' | 'role'> & { password: string }): Promise<IUser> => {
+export const register = async (userData: Omit<IUser, 'id' | 'created_at' | 'updated_at' | 'address_ids' | 'role'> & { password: string }): Promise<IUser> => {
     const { password, ...rest } = userData;
     const hashedPassword = await bcrypt.hash(password, 10);
     const newUser = await UserModel.create({ ...rest, password: hashedPassword, role: 'customer' });

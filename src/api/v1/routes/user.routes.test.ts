@@ -21,23 +21,23 @@ describe('User API', () => {
   beforeAll(() => {
     adminUser = {
       id: 'admin123',
-      firstName: 'Admin',
-      lastName: 'User',
+      first_name: 'Admin',
+      last_name: 'User',
       email: 'admin@example.com',
       phone: '1112223333',
       role: 'admin',
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString(),
     };
     customerUser = {
       id: 'customer123',
-      firstName: 'Customer',
-      lastName: 'User',
+      first_name: 'Customer',
+      last_name: 'User',
       email: 'customer@example.com',
       phone: '4445556666',
       role: 'customer',
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString(),
     };
     adminToken = 'mock-admin-token';
     customerToken = 'mock-customer-token';
@@ -140,7 +140,7 @@ describe('User API', () => {
 
   describe('PUT /api/v1/users/profile', () => {
     it('should update the authenticated user\'s profile', async () => {
-      const updateData = { firstName: 'UpdatedName' };
+      const updateData = { first_name: 'UpdatedName' };
       const updatedUser: IUser = { ...customerUser, ...updateData };
       mockedUserService.updateUser.mockResolvedValue(updatedUser);
 
@@ -158,7 +158,7 @@ describe('User API', () => {
     it('should return 401 if not authenticated', async () => {
       const res = await request(app)
         .put('/api/v1/users/profile')
-        .send({ firstName: 'UpdatedName' });
+        .send({ first_name: 'UpdatedName' });
 
       expect(res.statusCode).toEqual(401);
       expect(res.body).toEqual({ message: 'No token, authorization denied' });
@@ -170,7 +170,7 @@ describe('User API', () => {
       const res = await request(app)
         .put('/api/v1/users/profile')
         .set('Cookie', [`token=${customerToken}`])
-        .send({ firstName: 'UpdatedName' });
+        .send({ first_name: 'UpdatedName' });
 
       expect(res.statusCode).toEqual(404);
       expect(res.body).toEqual({ message: 'User not found' });
@@ -182,7 +182,7 @@ describe('User API', () => {
       const res = await request(app)
         .put('/api/v1/users/profile')
         .set('Cookie', [`token=${customerToken}`])
-        .send({ firstName: 'UpdatedName' });
+        .send({ first_name: 'UpdatedName' });
 
       expect(res.statusCode).toEqual(500);
       expect(res.body).toEqual({ message: 'Database error', stack: expect.any(String) });

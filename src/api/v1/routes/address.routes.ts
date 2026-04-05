@@ -20,10 +20,10 @@ const router = Router();
  *       type: object
  *       required:
  *         - user_id
- *         - fullName
+ *         - full_name
  *         - address
  *         - city
- *         - postalCode
+ *         - postal_code
  *         - country
  *       properties:
  *         id:
@@ -32,7 +32,7 @@ const router = Router();
  *         user_id:
  *           type: string
  *           description: The ID of the user this address belongs to
- *         fullName:
+ *         full_name:
  *           type: string
  *           description: Full name of the recipient
  *         address:
@@ -41,17 +41,17 @@ const router = Router();
  *         city:
  *           type: string
  *           description: City
- *         postalCode:
+ *         postal_code:
  *           type: string
  *           description: Postal code
  *         country:
  *           type: string
  *           description: Country
- *         createdAt:
+ *         created_at:
  *           type: string
  *           format: date-time
  *           description: The date and time the address was created
- *         updatedAt:
+ *         updated_at:
  *           type: string
  *           format: date-time
  *           description: The date and time the address was last updated
@@ -96,19 +96,19 @@ router.get('/user', asyncHandler(authenticate), asyncHandler(getAddressesByUserI
  *           schema:
  *             type: object
  *             required:
- *               - fullName
+ *               - full_name
  *               - address
  *               - city
- *               - postalCode
+ *               - postal_code
  *               - country
  *             properties:
- *               fullName:
+ *               full_name:
  *                 type: string
  *               address:
  *                 type: string
  *               city:
  *                 type: string
- *               postalCode:
+ *               postal_code:
  *                 type: string
  *               country:
  *                 type: string

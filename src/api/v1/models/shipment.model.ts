@@ -49,7 +49,7 @@ export class ShipmentModel {
     const { data, error }: PostgrestResponse<IShipment> = await supabase
       .from(TABLE_NAME)
       .select('*')
-      .eq('orderId', orderId);
+      .eq('order_id', orderId);
 
     if (error) {
       console.error('Error finding shipments by order ID:', error);
@@ -67,7 +67,7 @@ export class ShipmentModel {
     const { data, error }: PostgrestResponse<IShipment> = await supabase
       .from(TABLE_NAME)
       .select('*')
-      .eq('userId', userId);
+      .eq('user_id', userId);
 
     if (error) {
       console.error('Error finding shipments by user ID:', error);
@@ -81,7 +81,7 @@ export class ShipmentModel {
    * @param shipmentData The shipment data to create.
    * @returns A Promise that resolves to the created shipment data.
    */
-  static async create(shipmentData: Omit<IShipment, 'id' | 'createdAt' | 'updatedAt'>): Promise<IShipment> {
+  static async create(shipmentData: Omit<IShipment, 'id' | 'created_at' | 'updated_at'>): Promise<IShipment> {
     const { data, error }: PostgrestSingleResponse<IShipment> = await supabase
       .from(TABLE_NAME)
       .insert([shipmentData])
@@ -101,7 +101,7 @@ export class ShipmentModel {
    * @param updates The fields to update.
    * @returns A Promise that resolves to the updated shipment data or null if not found.
    */
-  static async update(id: string, updates: Partial<Omit<IShipment, 'id' | 'createdAt' | 'updatedAt'>>): Promise<IShipment | null> {
+  static async update(id: string, updates: Partial<Omit<IShipment, 'id' | 'created_at' | 'updated_at'>>): Promise<IShipment | null> {
     const { data, error }: PostgrestSingleResponse<IShipment> = await supabase
       .from(TABLE_NAME)
       .update(updates)

@@ -64,7 +64,7 @@ export class CategoryModel {
    * @param categoryData The category data to create.
    * @returns A Promise that resolves to the created category data.
    */
-  static async create(categoryData: Omit<ICategory, 'id' | 'createdAt' | 'updatedAt'>): Promise<ICategory> {
+  static async create(categoryData: Omit<ICategory, 'id' | 'created_at' | 'updated_at'>): Promise<ICategory> {
     const { data, error }: PostgrestSingleResponse<ICategory> = await supabase
       .from(TABLE_NAME)
       .insert([categoryData])
@@ -84,7 +84,7 @@ export class CategoryModel {
    * @param updates The fields to update.
    * @returns A Promise that resolves to the updated category data or null if not found.
    */
-  static async update(id: string, updates: Partial<Omit<ICategory, 'id' | 'createdAt' | 'updatedAt'>>): Promise<ICategory | null> {
+  static async update(id: string, updates: Partial<Omit<ICategory, 'id' | 'created_at' | 'updated_at'>>): Promise<ICategory | null> {
     const { data, error }: PostgrestSingleResponse<ICategory> = await supabase
       .from(TABLE_NAME)
       .update(updates)

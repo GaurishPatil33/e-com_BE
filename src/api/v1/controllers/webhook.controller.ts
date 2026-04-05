@@ -13,18 +13,18 @@ const handlePaymentCaptured = async (payload: any) => {
     const paymentRecord = await PaymentModel.findByRazorpayOrderId(razorpayOrderId);
 
     if (paymentRecord) {
-        const orderId = paymentRecord.orderId;
-        await updateOrder(orderId, {
-            paymentStatus: 'paid',
-            paymentId: paymentId,
+        const order_id = paymentRecord.order_id;
+        await updateOrder(order_id, {
+            payment_status: 'paid',
+            payment_id: paymentId,
         });
         // Also update the payment record itself
         await PaymentModel.update(paymentRecord.id, {
             status: 'completed',
-            transactionId: paymentId,
-            paymentGateway: 'Razorpay'
+            transaction_id: paymentId,
+            payment_gateway: 'Razorpay'
         });
-        console.log(`Order ${orderId} marked as paid.`);
+        console.log(`Order ${order_id} marked as paid.`);
     } else {
         console.error(`Payment record not found for Razorpay Order ID: ${razorpayOrderId}`);
     }
@@ -37,17 +37,17 @@ const handlePaymentFailed = async (payload: any) => {
     const paymentRecord = await PaymentModel.findByRazorpayOrderId(razorpayOrderId);
 
     if (paymentRecord) {
-        const orderId = paymentRecord.orderId;
-        await updateOrder(orderId, {
-            paymentStatus: 'failed',
+        const order_id = paymentRecord.order_id;
+        await updateOrder(order_id, {
+            payment_status: 'failed',
         });
         // Also update the payment record itself
         await PaymentModel.update(paymentRecord.id, {
             status: 'failed',
-            transactionId: payload.id, // Razorpay payment ID for failed transaction
-            paymentGateway: 'Razorpay'
+            transaction_id: payload.id, // Razorpay payment ID for failed transaction
+            payment_gateway: 'Razorpay'
         });
-        console.log(`Order ${orderId} marked as payment failed.`);
+        console.log(`Order ${order_id} marked as payment failed.`);
     } else {
         console.error(`Payment record not found for Razorpay Order ID: ${razorpayOrderId}`);
     }

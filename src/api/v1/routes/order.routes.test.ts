@@ -12,47 +12,49 @@ const mockedOrderService = orderService as jest.Mocked<typeof orderService>;
 const mockedAuthService = authService as jest.Mocked<typeof authService>;
 
 describe('Order API', () => {
-  let adminUser: IUser;
-  let customerUser: IUser;
-  let adminToken: string;
-  let customerToken: string;
+  let admin_user: IUser;
+  let customer_user: IUser;
+  let admin_token: string;
+  let customer_token: string;
 
   beforeAll(() => {
-    adminUser = {
+    admin_user = {
       id: 'admin123',
-      firstName: 'Admin',
-      lastName: 'User',
+      first_name: 'Admin',
+      last_name: 'User',
       email: 'admin@example.com',
       phone: '1112223333',
+      password: 'hashedpassword',
       role: 'admin',
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString(),
     };
-    customerUser = {
+    customer_user = {
       id: 'customer123',
-      firstName: 'Customer',
-      lastName: 'User',
+      first_name: 'Customer',
+      last_name: 'User',
       email: 'customer@example.com',
       phone: '4445556666',
+      password: 'hashedpassword',
       role: 'customer',
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString(),
     };
-    adminToken = 'mock-admin-token';
-    customerToken = 'mock-customer-token';
+    admin_token = 'mock-admin-token';
+    customer_token = 'mock-customer-token';
   });
 
   beforeEach(() => {
     jest.clearAllMocks();
     // Default mocks for authentication
     mockedAuthService.verifyAuthToken.mockImplementation((token: string) => {
-      if (token === adminToken) return { id: adminUser.id };
-      if (token === customerToken) return { id: customerUser.id };
+      if (token === admin_token) return { id: admin_user.id };
+      if (token === customer_token) return { id: customer_user.id };
       return null;
     });
     mockedAuthService.findUserById.mockImplementation((id: string) => {
-      if (id === adminUser.id) return Promise.resolve(adminUser);
-      if (id === customerUser.id) return Promise.resolve(customerUser);
+      if (id === admin_user.id) return Promise.resolve(admin_user);
+      if (id === customer_user.id) return Promise.resolve(customer_user);
       return Promise.resolve(null);
     });
   });
@@ -62,21 +64,21 @@ describe('Order API', () => {
       const mockOrders: IOrder[] = [
         {
           id: 'order1',
-          userId: adminUser.id,
-          items: [{ productId: 'prod1', title: 'Item 1', quantity: 1, priceAtPurchase: 10 }],
-          shippingAddress: { fullName: 'Admin User', phone: '123', street: '123 Admin St', city: 'City', state: 'State', postalCode: '12345', country: 'Country' },
-          paymentStatus: 'paid',
-          orderStatus: 'delivered',
-          totalAmount: 10,
-          createdAt: new Date().toISOString(),
-          updatedAt: new Date().toISOString(),
+          user_id: admin_user.id,
+          items: [{ product_id: 'prod1', title: 'Item 1', quantity: 1, price_at_purchase: 10 }],
+          shipping_address: { full_name: 'Admin User', phone: '123', street: '123 Admin St', city: 'City', state: 'State', postal_code: '12345', country: 'Country' },
+          payment_status: 'paid',
+          order_status: 'delivered',
+          total_amount: 10,
+          created_at: new Date().toISOString(),
+          updated_at: new Date().toISOString(),
         },
       ];
       mockedOrderService.findAllOrders.mockResolvedValue(mockOrders);
 
       const res = await request(app)
         .get('/api/v1/orders')
-        .set('Cookie', [`token=${adminToken}`]);
+        .set('Cookie', [`token=${admin_token}`]);
 
       expect(res.statusCode).toEqual(200);
       expect(res.body).toEqual(mockOrders);
@@ -94,7 +96,7 @@ describe('Order API', () => {
 
       const res = await request(app)
         .get('/api/v1/orders')
-        .set('Cookie', [`token=${adminToken}`]);
+        .set('Cookie', [`token=${admin_token}`]);
 
       expect(res.statusCode).toEqual(500);
       expect(res.body).toEqual({ message: 'Database error', stack: expect.any(String) });
@@ -104,41 +106,41 @@ describe('Order API', () => {
   describe('POST /api/v1/orders', () => {
     it('should create a new order for an authenticated user', async () => {
       const newOrderInput = {
-        items: [{ productId: 'prod2', title: 'Item 2', quantity: 2, priceAtPurchase: 20 }],
-        shippingAddress: { fullName: 'Customer User', phone: '456', street: '456 Customer Ave', city: 'Town', state: 'State', postalCode: '67890', country: 'Country' },
-        totalAmount: 40,
+        items: [{ product_id: 'prod2', title: 'Item 2', quantity: 2, price_at_purchase: 20 }],
+        shipping_address: { full_name: 'Customer User', phone: '456', street: '456 Customer Ave', city: 'Town', state: 'State', postal_code: '67890', country: 'Country' },
+        total_amount: 40,
       };
       const createdOrder: IOrder = {
         id: 'newOrder1',
-        userId: customerUser.id,
-        paymentStatus: 'pending',
-        orderStatus: 'processing',
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString(),
+        user_id: customer_user.id,
+        payment_status: 'pending',
+        order_status: 'processing',
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString(),
         ...newOrderInput,
       };
       mockedOrderService.createOrder.mockResolvedValue(createdOrder);
 
       const res = await request(app)
         .post('/api/v1/orders')
-        .set('Cookie', [`token=${customerToken}`])
+        .set('Cookie', [`token=${customer_token}`])
         .send(newOrderInput);
 
       expect(res.statusCode).toEqual(201);
       expect(res.body).toEqual(createdOrder);
       expect(mockedOrderService.createOrder).toHaveBeenCalledWith(expect.objectContaining({
-        userId: customerUser.id,
-        paymentStatus: 'pending',
-        orderStatus: 'processing',
+        user_id: customer_user.id,
+        payment_status: 'pending',
+        order_status: 'processing',
         ...newOrderInput,
       }));
     });
 
     it('should return 401 if not authenticated', async () => {
       const newOrderInput = {
-        items: [{ productId: 'prod2', title: 'Item 2', quantity: 2, priceAtPurchase: 20 }],
-        shippingAddress: { fullName: 'Customer User', phone: '456', street: '456 Customer Ave', city: 'Town', state: 'State', postalCode: '67890', country: 'Country' },
-        totalAmount: 40,
+        items: [{ product_id: 'prod2', title: 'Item 2', quantity: 2, price_at_purchase: 20 }],
+        shipping_address: { full_name: 'Customer User', phone: '456', street: '456 Customer Ave', city: 'Town', state: 'State', postal_code: '67890', country: 'Country' },
+        total_amount: 40,
       };
       const res = await request(app)
         .post('/api/v1/orders')
@@ -150,15 +152,15 @@ describe('Order API', () => {
 
     it('should return 500 if there is a server error', async () => {
       const newOrderInput = {
-        items: [{ productId: 'prod2', title: 'Item 2', quantity: 2, priceAtPurchase: 20 }],
-        shippingAddress: { fullName: 'Customer User', phone: '456', street: '456 Customer Ave', city: 'Town', state: 'State', postalCode: '67890', country: 'Country' },
-        totalAmount: 40,
+        items: [{ product_id: 'prod2', title: 'Item 2', quantity: 2, price_at_purchase: 20 }],
+        shipping_address: { full_name: 'Customer User', phone: '456', street: '456 Customer Ave', city: 'Town', state: 'State', postal_code: '67890', country: 'Country' },
+        total_amount: 40,
       };
       mockedOrderService.createOrder.mockRejectedValue(new Error('Database error'));
 
       const res = await request(app)
         .post('/api/v1/orders')
-        .set('Cookie', [`token=${customerToken}`])
+        .set('Cookie', [`token=${customer_token}`])
         .send(newOrderInput);
 
       expect(res.statusCode).toEqual(500);
@@ -171,25 +173,25 @@ describe('Order API', () => {
       const mockUserOrders: IOrder[] = [
         {
           id: 'userOrder1',
-          userId: customerUser.id,
-          items: [{ productId: 'prod3', title: 'Item 3', quantity: 1, priceAtPurchase: 50 }],
-          shippingAddress: { fullName: 'Customer User', phone: '456', street: '456 Customer Ave', city: 'Town', state: 'State', postalCode: '67890', country: 'Country' },
-          paymentStatus: 'paid',
-          orderStatus: 'processing',
-          totalAmount: 50,
-          createdAt: new Date().toISOString(),
-          updatedAt: new Date().toISOString(),
+          user_id: customer_user.id,
+          items: [{ product_id: 'prod3', title: 'Item 3', quantity: 1, price_at_purchase: 50 }],
+          shipping_address: { full_name: 'Customer User', phone: '456', street: '456 Customer Ave', city: 'Town', state: 'State', postal_code: '67890', country: 'Country' },
+          payment_status: 'paid',
+          order_status: 'processing',
+          total_amount: 50,
+          created_at: new Date().toISOString(),
+          updated_at: new Date().toISOString(),
         },
       ];
       mockedOrderService.findOrdersByUserId.mockResolvedValue(mockUserOrders);
 
       const res = await request(app)
         .get('/api/v1/orders/user')
-        .set('Cookie', [`token=${customerToken}`]);
+        .set('Cookie', [`token=${customer_token}`]);
 
       expect(res.statusCode).toEqual(200);
       expect(res.body).toEqual(mockUserOrders);
-      expect(mockedOrderService.findOrdersByUserId).toHaveBeenCalledWith(customerUser.id);
+      expect(mockedOrderService.findOrdersByUserId).toHaveBeenCalledWith(customer_user.id);
     });
 
     it('should return 401 if not authenticated', async () => {
@@ -203,7 +205,7 @@ describe('Order API', () => {
 
       const res = await request(app)
         .get('/api/v1/orders/user')
-        .set('Cookie', [`token=${customerToken}`]);
+        .set('Cookie', [`token=${customer_token}`]);
 
       expect(res.statusCode).toEqual(500);
       expect(res.body).toEqual({ message: 'Database error', stack: expect.any(String) });
@@ -214,20 +216,20 @@ describe('Order API', () => {
     it('should return an order by ID for an authenticated user', async () => {
       const mockOrder: IOrder = {
         id: 'orderById1',
-        userId: customerUser.id,
-        items: [{ productId: 'prod4', title: 'Item 4', quantity: 1, priceAtPurchase: 100 }],
-        shippingAddress: { fullName: 'Customer User', phone: '456', street: '456 Customer Ave', city: 'Town', state: 'State', postalCode: '67890', country: 'Country' },
-        paymentStatus: 'paid',
-        orderStatus: 'shipped',
-        totalAmount: 100,
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString(),
+        user_id: customer_user.id,
+        items: [{ product_id: 'prod4', title: 'Item 4', quantity: 1, price_at_purchase: 100 }],
+        shipping_address: { full_name: 'Customer User', phone: '456', street: '456 Customer Ave', city: 'Town', state: 'State', postal_code: '67890', country: 'Country' },
+        payment_status: 'paid',
+        order_status: 'shipped',
+        total_amount: 100,
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString(),
       };
       mockedOrderService.findOrderById.mockResolvedValue(mockOrder);
 
       const res = await request(app)
         .get(`/api/v1/orders/${mockOrder.id}`)
-        .set('Cookie', [`token=${customerToken}`]);
+        .set('Cookie', [`token=${customer_token}`]);
 
       expect(res.statusCode).toEqual(200);
       expect(res.body).toEqual(mockOrder);
@@ -239,7 +241,7 @@ describe('Order API', () => {
 
       const res = await request(app)
         .get('/api/v1/orders/nonexistent')
-        .set('Cookie', [`token=${customerToken}`]);
+        .set('Cookie', [`token=${customer_token}`]);
 
       expect(res.statusCode).toEqual(404);
       expect(res.body).toEqual({ message: 'Order not found' });
@@ -256,7 +258,7 @@ describe('Order API', () => {
 
       const res = await request(app)
         .get('/api/v1/orders/someid')
-        .set('Cookie', [`token=${customerToken}`]);
+        .set('Cookie', [`token=${customer_token}`]);
 
       expect(res.statusCode).toEqual(500);
       expect(res.body).toEqual({ message: 'Database error', stack: expect.any(String) });
@@ -269,20 +271,20 @@ describe('Order API', () => {
       const updateData = { orderStatus: 'delivered' };
       const updatedOrder: IOrder = {
         id: orderId,
-        userId: adminUser.id,
-        items: [{ productId: 'prod5', title: 'Item 5', quantity: 1, priceAtPurchase: 200 }],
-        shippingAddress: { fullName: 'Admin User', phone: '123', street: '123 Admin St', city: 'City', state: 'State', postalCode: '12345', country: 'Country' },
-        paymentStatus: 'paid',
-        orderStatus: 'delivered',
-        totalAmount: 200,
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString(),
+        user_id: admin_user.id,
+        items: [{ product_id: 'prod5', title: 'Item 5', quantity: 1, price_at_purchase: 200 }],
+        shipping_address: { full_name: 'Admin User', phone: '123', street: '123 Admin St', city: 'City', state: 'State', postal_code: '12345', country: 'Country' },
+        payment_status: 'paid',
+        order_status: 'delivered',
+        total_amount: 200,
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString(),
       };
       mockedOrderService.updateOrder.mockResolvedValue(updatedOrder);
 
       const res = await request(app)
         .put(`/api/v1/orders/${orderId}`)
-        .set('Cookie', [`token=${adminToken}`])
+        .set('Cookie', [`token=${admin_token}`])
         .send(updateData);
 
       expect(res.statusCode).toEqual(200);
@@ -295,7 +297,7 @@ describe('Order API', () => {
 
       const res = await request(app)
         .put('/api/v1/orders/nonexistent')
-        .set('Cookie', [`token=${adminToken}`])
+        .set('Cookie', [`token=${admin_token}`])
         .send({ orderStatus: 'delivered' });
 
       expect(res.statusCode).toEqual(404);
@@ -316,7 +318,7 @@ describe('Order API', () => {
 
       const res = await request(app)
         .put('/api/v1/orders/someid')
-        .set('Cookie', [`token=${adminToken}`])
+        .set('Cookie', [`token=${admin_token}`])
         .send({ orderStatus: 'delivered' });
 
       expect(res.statusCode).toEqual(500);
@@ -331,7 +333,7 @@ describe('Order API', () => {
 
       const res = await request(app)
         .delete(`/api/v1/orders/${orderId}`)
-        .set('Cookie', [`token=${adminToken}`]);
+        .set('Cookie', [`token=${admin_token}`]);
 
       expect(res.statusCode).toEqual(204);
       expect(res.body).toEqual({});
@@ -343,7 +345,7 @@ describe('Order API', () => {
 
       const res = await request(app)
         .delete('/api/v1/orders/nonexistent')
-        .set('Cookie', [`token=${adminToken}`]);
+        .set('Cookie', [`token=${admin_token}`]);
 
       expect(res.statusCode).toEqual(404);
       expect(res.body).toEqual({ message: 'Order not found or could not be deleted' });
@@ -360,7 +362,7 @@ describe('Order API', () => {
 
       const res = await request(app)
         .delete('/api/v1/orders/someid')
-        .set('Cookie', [`token=${adminToken}`]);
+        .set('Cookie', [`token=${admin_token}`]);
 
       expect(res.statusCode).toEqual(500);
       expect(res.body).toEqual({ message: 'Database error', stack: expect.any(String) });

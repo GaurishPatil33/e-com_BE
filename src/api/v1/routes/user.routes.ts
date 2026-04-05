@@ -22,9 +22,9 @@ const router = Router();
  *         id:
  *           type: string
  *           description: The auto-generated ID of the user
- *         firstName:
+ *         first_name:
  *           type: string
- *         lastName:
+ *         last_name:
  *           type: string
  *         email:
  *           type: string
@@ -39,10 +39,10 @@ const router = Router();
  *           items:
  *             type: string
  *             format: ObjectId
- *         createdAt:
+ *         created_at:
  *           type: string
  *           format: date-time
- *         updatedAt:
+ *         updated_at:
  *           type: string
  *           format: date-time
  */

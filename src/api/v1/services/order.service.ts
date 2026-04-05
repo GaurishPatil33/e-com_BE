@@ -12,11 +12,11 @@ export const findOrdersByUserId = async (userId: string): Promise<IOrder[]> => {
     return await OrderModel.findByUserId(userId);
 };
 
-export const createOrder = async (orderData: Omit<IOrder, 'id' | 'createdAt' | 'updatedAt'>): Promise<IOrder> => {
+export const createOrder = async (orderData: Omit<IOrder, 'id' | 'created_at' | 'updated_at'>): Promise<IOrder> => {
     return await OrderModel.create(orderData);
 };
 
-export const updateOrder = async (id: string, updates: Partial<Omit<IOrder, 'id' | 'createdAt' | 'updatedAt'>>): Promise<IOrder | null> => {
+export const updateOrder = async (id: string, updates: Partial<Omit<IOrder, 'id' | 'created_at' | 'updated_at'>>): Promise<IOrder | null> => {
     return await OrderModel.update(id, updates);
 };
 

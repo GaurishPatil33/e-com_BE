@@ -17,10 +17,10 @@ export const findShipmentsByUserId = async (userId: string): Promise<IShipment[]
     return await ShipmentModel.findByUserId(userId);
 };
 
-export const createShipment = async (shipmentData: Omit<IShipment, 'id' | 'createdAt' | 'updatedAt'>): Promise<IShipment> => {
+export const createShipment = async (shipmentData: Omit<IShipment, 'id' | 'created_at' | 'updated_at'>): Promise<IShipment> => {
     return await ShipmentModel.create(shipmentData);
 };
 
-export const updateShipment = async (id: string, updates: Partial<Omit<IShipment, 'id' | 'createdAt' | 'updatedAt'>>): Promise<IShipment | null> => {
+export const updateShipment = async (id: string, updates: Partial<Omit<IShipment, 'id' | 'created_at' | 'updated_at'>>): Promise<IShipment | null> => {
     return await ShipmentModel.update(id, updates);
 };

@@ -22,23 +22,25 @@ describe('Payment API', () => {
   beforeAll(() => {
     adminUser = {
       id: 'admin123',
-      firstName: 'Admin',
-      lastName: 'User',
+      first_name: 'Admin',
+      last_name: 'User',
       email: 'admin@example.com',
       phone: '1112223333',
+      password: 'hashedpassword',
       role: 'admin',
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString(),
     };
     customerUser = {
       id: 'customer123',
-      firstName: 'Customer',
-      lastName: 'User',
+      first_name: 'Customer',
+      last_name: 'User',
       email: 'customer@example.com',
       phone: '4445556666',
+      password: 'hashedpassword',
       role: 'customer',
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString(),
     };
     adminToken = 'mock-admin-token';
     customerToken = 'mock-customer-token';
@@ -64,15 +66,15 @@ describe('Payment API', () => {
       const mockPayments: IPayment[] = [
         {
           id: 'pay1',
-          orderId: 'order1',
-          userId: adminUser.id,
+          order_id: 'order1',
+          user_id: adminUser.id,
           amount: 100,
           currency: 'INR',
           status: 'completed',
           method: 'credit_card',
-          paymentGateway: 'Razorpay',
-          createdAt: new Date().toISOString(),
-          updatedAt: new Date().toISOString(),
+          payment_gateway: 'Razorpay',
+          created_at: new Date().toISOString(),
+          updated_at: new Date().toISOString(),
         },
       ];
       mockedPaymentService.findAllPayments.mockResolvedValue(mockPayments);
@@ -107,19 +109,33 @@ describe('Payment API', () => {
   describe('POST /api/v1/payments', () => {
     it('should create a new payment for an authenticated user', async () => {
       const newPaymentInput = {
-        orderId: 'order2',
+        order_id: 'order2',
         amount: 200,
         currency: 'INR',
         method: 'credit_card',
-        paymentGateway: 'Razorpay',
+        payment_gateway: 'Razorpay',
       };
-      const createdPayment: IPayment = {
+      const createdPayment: IPayment & { razorpay_order: any } = {
         id: 'pay2',
-        userId: customerUser.id,
+        user_id: customerUser.id,
         status: 'pending',
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString(),
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString(),
         ...newPaymentInput,
+        razorpay_order: {
+          amount: newPaymentInput.amount * 100,
+          currency: newPaymentInput.currency,
+          id: 'order_mockRazorpayId',
+          status: 'created',
+          receipt: newPaymentInput.order_id,
+          amount_due: newPaymentInput.amount * 100,
+          amount_paid: 0,
+          attempts: 0,
+          created_at: Math.floor(Date.now() / 1000),
+          entity: 'order',
+          notes: [],
+          offer_id: null,
+        },
       };
       mockedPaymentService.createPayment.mockResolvedValue(createdPayment);
 
@@ -131,7 +147,7 @@ describe('Payment API', () => {
       expect(res.statusCode).toEqual(201);
       expect(res.body).toEqual(createdPayment);
       expect(mockedPaymentService.createPayment).toHaveBeenCalledWith(expect.objectContaining({
-        userId: customerUser.id,
+        user_id: customerUser.id,
         status: 'pending',
         ...newPaymentInput,
       }));
@@ -139,11 +155,11 @@ describe('Payment API', () => {
 
     it('should return 401 if not authenticated', async () => {
       const newPaymentInput = {
-        orderId: 'order2',
+        order_id: 'order2',
         amount: 200,
         currency: 'INR',
         method: 'credit_card',
-        paymentGateway: 'Razorpay',
+        payment_gateway: 'Razorpay',
       };
       const res = await request(app)
         .post('/api/v1/payments')
@@ -155,11 +171,11 @@ describe('Payment API', () => {
 
     it('should return 500 if there is a server error', async () => {
       const newPaymentInput = {
-        orderId: 'order2',
+        order_id: 'order2',
         amount: 200,
         currency: 'INR',
         method: 'credit_card',
-        paymentGateway: 'Razorpay',
+        payment_gateway: 'Razorpay',
       };
       mockedPaymentService.createPayment.mockRejectedValue(new Error('Database error'));
 
@@ -177,15 +193,15 @@ describe('Payment API', () => {
     it('should return a payment by ID for an authenticated user', async () => {
       const mockPayment: IPayment = {
         id: 'pay3',
-        orderId: 'order3',
-        userId: customerUser.id,
+        order_id: 'order3',
+        user_id: customerUser.id,
         amount: 300,
         currency: 'INR',
         status: 'completed',
         method: 'credit_card',
-        paymentGateway: 'Razorpay',
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString(),
+        payment_gateway: 'Razorpay',
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString(),
       };
       mockedPaymentService.findPaymentById.mockResolvedValue(mockPayment);
 
@@ -233,15 +249,15 @@ describe('Payment API', () => {
       const updateData = { status: 'refunded' };
       const updatedPayment: IPayment = {
         id: paymentId,
-        orderId: 'order4',
-        userId: adminUser.id,
+        order_id: 'order4',
+        user_id: adminUser.id,
         amount: 400,
         currency: 'INR',
         status: 'refunded',
         method: 'credit_card',
-        paymentGateway: 'Razorpay',
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString(),
+        payment_gateway: 'Razorpay',
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString(),
       };
       mockedPaymentService.updatePayment.mockResolvedValue(updatedPayment);
 
@@ -295,15 +311,15 @@ describe('Payment API', () => {
       const mockPayments: IPayment[] = [
         {
           id: 'pay5',
-          orderId: orderId,
-          userId: customerUser.id,
+          order_id: orderId,
+          user_id: customerUser.id,
           amount: 50,
           currency: 'INR',
           status: 'completed',
           method: 'credit_card',
-          paymentGateway: 'Razorpay',
-          createdAt: new Date().toISOString(),
-          updatedAt: new Date().toISOString(),
+          payment_gateway: 'Razorpay',
+          created_at: new Date().toISOString(),
+          updated_at: new Date().toISOString(),
         },
       ];
       mockedPaymentService.findPaymentsByOrderId.mockResolvedValue(mockPayments);

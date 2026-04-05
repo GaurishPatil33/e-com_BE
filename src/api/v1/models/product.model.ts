@@ -4,6 +4,11 @@ import { IProduct } from '../../../types/products-types';
 
 const TABLE_NAME = 'products';
 
+interface RawProductCategoryJoin {
+  product_id: string;
+  products: IProduct & { product_categories: { category_id: string }[] };
+}
+
 export class ProductModel {
   /**
    * Finds all products.
@@ -58,19 +63,37 @@ export class ProductModel {
    * @returns A Promise that resolves to an array of product data.
    */
   static async findByCategoryId(categoryId: string): Promise<IProduct[]> {
-    const { data, error }: PostgrestResponse<IProduct & { product_categories: { category_id: string }[] }> = await supabase
+    // First, get all product_ids associated with the category
+    const { data: productCategoryData, error: productCategoryError } = await supabase
       .from('product_categories')
-      .select('product_id, products(*, product_categories(category_id))')
+      .select('product_id')
       .eq('category_id', categoryId);
 
-    if (error) {
-      console.error('Error finding products by category ID:', error);
-      throw error;
+    if (productCategoryError) {
+      console.error('Error finding product_ids by category ID:', productCategoryError);
+      throw productCategoryError;
     }
 
-    return (data || []).map((item: any) => ({
-      ...item.products,
-      category_ids: item.products.product_categories.map((pc: any) => pc.category_id),
+    if (!productCategoryData || productCategoryData.length === 0) {
+      return []; // No products found for this category
+    }
+
+    const productIds = productCategoryData.map(item => item.product_id);
+
+    // Now, fetch the full product details for these IDs
+    const { data: productsData, error: productsError }: PostgrestResponse<IProduct & { product_categories: { category_id: string }[] }> = await supabase
+      .from(TABLE_NAME)
+      .select('*, product_categories(category_id)')
+      .in('id', productIds);
+
+    if (productsError) {
+      console.error('Error finding products by IDs:', productsError);
+      throw productsError;
+    }
+
+    return (productsData || []).map(product => ({
+      ...product,
+      category_ids: product.product_categories.map(pc => pc.category_id),
     }));
   }
 

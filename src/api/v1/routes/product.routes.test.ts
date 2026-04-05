@@ -14,8 +14,8 @@ describe('Product API', () => {
   describe('GET /api/v1/products', () => {
     it('should return all products', async () => {
       const mockProducts: IProduct[] = [
-        { id: '1', title: 'Product 1', price: 100, category: [], media: [], createdAt: '2023-01-01T00:00:00Z', updatedAt: '2023-01-01T00:00:00Z' },
-        { id: '2', title: 'Product 2', price: 200, category: [], media: [], createdAt: '2023-01-01T00:00:00Z', updatedAt: '2023-01-01T00:00:00Z' },
+        { id: '1', title: 'Product 1', price: 100, stock_quantity: 10, category_ids: [], images: [], created_at: '2023-01-01T00:00:00Z', updated_at: '2023-01-01T00:00:00Z' },
+        { id: '2', title: 'Product 2', price: 200, stock_quantity: 5, category_ids: [], images: [], created_at: '2023-01-01T00:00:00Z', updated_at: '2023-01-01T00:00:00Z' },
       ];
       mockedProductService.findAllProducts.mockResolvedValue(mockProducts);
 
@@ -39,7 +39,7 @@ describe('Product API', () => {
 
   describe('GET /api/v1/products/:id', () => {
     it('should return a product when given a valid ID', async () => {
-      const mockProduct: IProduct = { id: '123', title: 'Test Product', price: 150, category: [], media: [], createdAt: '', updatedAt: '' };
+      const mockProduct: IProduct = { id: '123', title: 'Test Product', price: 150, stock_quantity: 10, category_ids: [], images: [], created_at: '', updated_at: '' };
       mockedProductService.findProductById.mockResolvedValue(mockProduct);
 
       const res = await request(app).get('/api/v1/products/123');
@@ -72,8 +72,8 @@ describe('Product API', () => {
 
   describe('POST /api/v1/products', () => {
     it('should create a new product', async () => {
-      const newProductData = { title: 'New Product', price: 250 };
-      const createdProduct: IProduct = { id: '456', ...newProductData, category: [], media: [], createdAt: '', updatedAt: '' };
+      const newProductData = { title: 'New Product', price: 250, stock_quantity: 20 };
+      const createdProduct: IProduct = { id: '456', ...newProductData, category_ids: [], images: [], created_at: '', updated_at: '' };
       mockedProductService.createProduct.mockResolvedValue(createdProduct);
 
       const res = await request(app)
@@ -102,8 +102,8 @@ describe('Product API', () => {
   describe('PUT /api/v1/products/:id', () => {
     it('should update an existing product', async () => {
       const productId = '123';
-      const updateData = { title: 'Updated Product', price: 160 };
-      const updatedProduct: IProduct = { id: productId, ...updateData, category: [], media: [], createdAt: '', updatedAt: '' };
+      const updateData = { title: 'Updated Product', price: 160, stock_quantity: 15 };
+      const updatedProduct: IProduct = { id: productId, ...updateData, category_ids: [], images: [], created_at: '', updated_at: '' };
       mockedProductService.updateProduct.mockResolvedValue(updatedProduct);
 
       const res = await request(app)

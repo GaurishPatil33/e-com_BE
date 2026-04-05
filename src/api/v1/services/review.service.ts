@@ -17,11 +17,11 @@ export const findReviewsByProductId = async (productId: string): Promise<IReview
     return await ReviewModel.findByProductId(productId);
 };
 
-export const createReview = async (reviewData: Omit<IReview, 'id' | 'createdAt' | 'updatedAt'>): Promise<IReview> => {
+export const createReview = async (reviewData: Omit<IReview, 'id' | 'created_at' | 'updated_at'>): Promise<IReview> => {
     return await ReviewModel.create(reviewData);
 };
 
-export const updateReview = async (id: string, updates: Partial<Omit<IReview, 'id' | 'createdAt' | 'updatedAt'>>): Promise<IReview | null> => {
+export const updateReview = async (id: string, updates: Partial<Omit<IReview, 'id' | 'created_at' | 'updated_at'>>): Promise<IReview | null> => {
     return await ReviewModel.update(id, updates);
 };
 

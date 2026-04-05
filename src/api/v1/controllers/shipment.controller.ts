@@ -41,9 +41,9 @@ export const createShipment = async (req: Request, res: Response) => {
         return res.status(401).json({ message: 'Unauthorized' });
     }
 
-    const shipmentData: Omit<IShipment, 'id' | 'createdAt' | 'updatedAt'> = {
+    const shipmentData: Omit<IShipment, 'id' | 'created_at' | 'updated_at'> = {
         ...req.body,
-        userId: userId,
+        user_id: userId,
         status: 'pending', // Default status
     };
 

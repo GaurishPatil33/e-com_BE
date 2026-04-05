@@ -14,7 +14,7 @@ const router = Router();
  *         - title
  *         - price
  *       properties:
- *         _id:
+ *         id:
  *           type: string
  *           description: The auto-generated ID of the product
  *         title:
@@ -27,15 +27,14 @@ const router = Router();
  *           type: number
  *           format: float
  *           description: The price of the product
- *         discountPercentage:
+ *         discount_percentage:
  *           type: number
  *           format: float
  *           description: Discount percentage
- *         category:
+ *         category_ids:
  *           type: array
  *           items:
  *             type: string
- *             format: ObjectId
  *           description: IDs of categories the product belongs to
  *         description:
  *           type: string
@@ -69,45 +68,45 @@ const router = Router();
  *                 enum: [image, video, youtube]
  *                 description: Type of media
  *           description: Media files (images, videos) associated with the product
- *         createdAt:
+ *         created_at:
  *           type: string
  *           format: date-time
  *           description: The date and time the product was created
- *         updatedAt:
+ *         updated_at:
  *           type: string
  *           format: date-time
  *           description: The date and time the product was last updated
  *       example:
- *         _id: "60d0fe4f5311236168a109cc"
+ *         id: "60d0fe4f5311236168a109cc"
  *         title: "Sample Product"
  *         brand: "BrandX"
  *         price: 99.99
- *         discountPercentage: 10
- *         category: ["60d0fe4f5311236168a109cd"]
+ *         discount_percentage: 10
+ *         category_ids: ["60d0fe4f5311236168a109cd"]
  *         description: "This is a sample product description."
  *         stock: 100
  *         rating: 4.5
  *         reviews: ["60d0fe4f5311236168a109ce"]
  *         media: [{ url: "http://example.com/image.jpg", public_id: "img1", type: "image" }]
- *         createdAt: "2023-01-01T12:00:00Z"
- *         updatedAt: "2023-01-01T12:00:00Z"
+ *         created_at: "2023-01-01T12:00:00Z"
+ *         updated_at: "2023-01-01T12:00:00Z"
  *
  *     Review:
  *       type: object
  *       required:
- *         - user
- *         - product
+ *         - user_id
+ *         - product_id
  *         - rating
  *         - comment
  *       properties:
- *         _id:
+ *         id:
  *           type: string
  *           description: The auto-generated ID of the review
- *         user:
+ *         user_id:
  *           type: string
  *           format: ObjectId
  *           description: The ID of the user who wrote the review
- *         product:
+ *         product_id:
  *           type: string
  *           format: ObjectId
  *           description: The ID of the product being reviewed
@@ -119,22 +118,22 @@ const router = Router();
  *         comment:
  *           type: string
  *           description: The text content of the review
- *         createdAt:
+ *         created_at:
  *           type: string
  *           format: date-time
  *           description: The date and time the review was created
- *         updatedAt:
+ *         updated_at:
  *           type: string
  *           format: date-time
  *           description: The date and time the review was last updated
  *       example:
- *         _id: "60d0fe4f5311236168a109ce"
- *         user: "60d0fe4f5311236168a109cf"
- *         product: "60d0fe4f5311236168a109cc"
+ *         id: "60d0fe4f5311236168a109ce"
+ *         user_id: "60d0fe4f5311236168a109cf"
+ *         product_id: "60d0fe4f5311236168a109cc"
  *         rating: 5
  *         comment: "Excellent product, highly recommend!"
- *         createdAt: "2023-01-05T10:00:00Z"
- *         updatedAt: "2023-01-05T10:00:00Z"
+ *         created_at: "2023-01-05T10:00:00Z"
+ *         updated_at: "2023-01-05T10:00:00Z"
  */
 
 /**

@@ -4,14 +4,14 @@ import { UserService } from '../services/user.service';
 import { findUserById } from '../services/auth.service';
 
 export const registerUser = async (req: Request, res: Response) => {
-    const { firstName, lastName, email, phone, password } = req.body;
+    const { first_name, last_name, email, phone, password } = req.body;
 
     const existingUser = await UserService.getUserByEmail(email);
     if (existingUser) {
         return res.status(409).json({ message: 'User with this email already exists' });
     }
 
-    const newUser = await authService.register({ firstName, lastName, email, phone, password });
+    const newUser = await authService.register({ first_name, last_name, email, phone, password });
     // Exclude password from the response
     const { password: _, ...userWithoutPassword } = newUser;
     res.status(201).json(userWithoutPassword);

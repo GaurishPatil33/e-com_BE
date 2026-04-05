@@ -21,7 +21,7 @@ const router = Router();
  *         - name
  *         - slug
  *         - media
- *         - isActive
+ *         - is_active
  *       properties:
  *         id:
  *           type: string
@@ -48,18 +48,18 @@ const router = Router();
  *                 type: string
  *                 enum: [image]
  *           description: Media files (images) associated with the category
- *         parentId:
+ *         parent_id:
  *           type: string
  *           nullable: true
  *           description: ID of the parent category for subcategories
- *         isActive:
+ *         is_active:
  *           type: boolean
  *           description: Whether the category is active or not
- *         createdAt:
+ *         created_at:
  *           type: string
  *           format: date-time
  *           description: The date and time the category was created
- *         updatedAt:
+ *         updated_at:
  *           type: string
  *           format: date-time
  *           description: The date and time the category was last updated
@@ -116,10 +116,10 @@ const router = Router();
  *                     type:
  *                       type: string
  *                       enum: [image]
- *               parentId:
+ *               parent_id:
  *                 type: string
  *                 nullable: true
- *               isActive:
+ *               is_active:
  *                 type: boolean
  *     responses:
  *       201:

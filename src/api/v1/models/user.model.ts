@@ -65,7 +65,7 @@ export class UserModel {
    * @param userData The user data to create.
    * @returns A Promise that resolves to the created user data.
    */
-  static async create(userData: Omit<IUser, 'id' | 'createdAt' | 'updatedAt'>): Promise<IUser> {
+  static async create(userData: Omit<IUser, 'id' | 'created_at' | 'updated_at'>): Promise<IUser> {
     const { data, error }: PostgrestSingleResponse<IUser> = await supabase
       .from(TABLE_NAME)
       .insert([userData])
@@ -85,7 +85,7 @@ export class UserModel {
    * @param updates The fields to update.
    * @returns A Promise that resolves to the updated user data or null if not found.
    */
-  static async update(id: string, updates: Partial<Omit<IUser, 'id' | 'createdAt' | 'updatedAt'>>): Promise<IUser | null> {
+  static async update(id: string, updates: Partial<Omit<IUser, 'id' | 'created_at' | 'updated_at'>>): Promise<IUser | null> {
     const { data, error }: PostgrestSingleResponse<IUser> = await supabase
       .from(TABLE_NAME)
       .update(updates)

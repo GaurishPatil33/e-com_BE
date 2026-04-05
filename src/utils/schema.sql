@@ -8,10 +8,15 @@ CREATE TABLE users (
     last_name VARCHAR(255) NOT NULL,
     email VARCHAR(255) UNIQUE NOT NULL,
     phone VARCHAR(255),
-    password VARCHAR(255) NOT NULL,
+    password VARCHAR(255),
+    oauth_provider VARCHAR(50),
+    oauth_id VARCHAR(255),
+    UNIQUE (oauth_provider, oauth_id),
+    CHECK (password IS NOT NULL OR (oauth_provider IS NOT NULL AND oauth_id IS NOT NULL)),
     role VARCHAR(50) NOT NULL CHECK (role IN ('customer', 'admin')),
     created_at TIMESTAMPTZ DEFAULT NOW(),
-    updated_at TIMSTAMPTZ DEFAULT NOW()
+    updated_at TIMESTAMPTZ DEFAULT NOW(),
+    address_ids UUID[]
 );
 
 -- Create the refresh_tokens table
@@ -63,6 +68,9 @@ CREATE TABLE products (
     description TEXT,
     price NUMERIC(10, 2) NOT NULL,
     stock_quantity INTEGER NOT NULL,
+    discount_percentage NUMERIC(5, 2),
+    brand VARCHAR(255),
+    average_rating NUMERIC(3, 2),
     images TEXT[],
     created_at TIMESTAMPTZ DEFAULT NOW(),
     updated_at TIMESTAMPTZ DEFAULT NOW()
@@ -81,7 +89,11 @@ CREATE TABLE product_categories (
 CREATE TABLE categories (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     name VARCHAR(255) UNIQUE NOT NULL,
+    slug VARCHAR(255) UNIQUE NOT NULL,
     description TEXT,
+    media JSONB,
+    parent_id UUID REFERENCES categories(id),
+    is_active BOOLEAN DEFAULT TRUE,
     created_at TIMESTAMPTZ DEFAULT NOW(),
     updated_at TIMESTAMPTZ DEFAULT NOW()
 );
@@ -129,7 +141,7 @@ CREATE INDEX ON users (email);
 CREATE INDEX ON orders (user_id);
 CREATE INDEX ON payments (order_id);
 CREATE INDEX ON payments (user_id);
-CREATE INDEX ON products (category_id);
+
 CREATE INDEX ON reviews (product_id);
 CREATE INDEX ON reviews (user_id);
 CREATE INDEX ON addresses (user_id);

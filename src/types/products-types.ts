@@ -3,17 +3,20 @@ export interface IProduct {
     title: string;
     brand?: string;
     price: number;
-    discountPercentage?: number;
+    discount_percentage?: number;
     category_ids: string[];
     description?: string;
-    stock?: number;
-    rating?: number;
-    reviews?: string[]; // Array of review IDs (strings)
-    media: {
-        url: string;
-        public_id: string;
-        type: "image" | "video" | "youtube";
-    }[];
+    stock_quantity: number;
+    average_rating?: number;
+    images: string[];
+    review_ids?: string[]; // To track associated review IDs at the application level
+    created_at: string;
+    updated_at: string;
+}
+
+export interface IProductCategory {
+    product_id: string;
+    category_id: string;
     created_at: string;
     updated_at: string;
 }

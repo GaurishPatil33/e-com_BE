@@ -17,7 +17,7 @@ export const validate = (schema: Schema) => {
 
 // Example schemas (these would typically be in a separate validation/schemas directory)
 export const registerUserSchema: Schema = {
-    firstName: {
+    first_name: {
         in: ['body'],
         notEmpty: {
             errorMessage: 'First name is required',
@@ -26,7 +26,7 @@ export const registerUserSchema: Schema = {
             errorMessage: 'First name must be a string',
         },
     },
-    lastName: {
+    last_name: {
         in: ['body'],
         notEmpty: {
             errorMessage: 'Last name is required',

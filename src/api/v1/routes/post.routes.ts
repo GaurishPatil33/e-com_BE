@@ -31,11 +31,11 @@ const router = Router();
  *         content:
  *           type: string
  *           description: The content of the post
- *         createdAt:
+ *         created_at:
  *           type: string
  *           format: date-time
  *           description: The date and time the post was created
- *         updatedAt:
+ *         updated_at:
  *           type: string
  *           format: date-time
  *           description: The date and time the post was last updated

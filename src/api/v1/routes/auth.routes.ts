@@ -26,15 +26,15 @@ const router = Router();
  *           schema:
  *             type: object
  *             required:
- *               - firstName
- *               - lastName
+ *               - first_name
+ *               - last_name
  *               - email
  *               - phone
  *               - password
  *             properties:
- *               firstName:
+ *               first_name:
  *                 type: string
- *               lastName:
+ *               last_name:
  *                 type: string
  *               email:
  *                 type: string
@@ -54,9 +54,9 @@ const router = Router();
  *               properties:
  *                 id:
  *                   type: string
- *                 firstName:
+ *                 first_name:
  *                   type: string
- *                 lastName:
+ *                 last_name:
  *                   type: string
  *                 email:
  *                   type: string
@@ -113,9 +113,9 @@ router.post('/register', validate(registerUserSchema), asyncHandler(registerUser
  *                   properties:
  *                     id:
  *                       type: string
- *                     firstName:
+ *                     first_name:
  *                       type: string
- *                     lastName:
+ *                     last_name:
  *                       type: string
  *                     email:
  *                       type: string
@@ -168,9 +168,9 @@ router.post('/logout', asyncHandler(logoutUser));
  *               properties:
  *                 id:
  *                   type: string
- *                 firstName:
+ *                 first_name:
  *                   type: string
- *                 lastName:
+ *                 last_name:
  *                   type: string
  *                 email:
  *                   type: string

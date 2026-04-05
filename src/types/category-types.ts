@@ -8,8 +8,8 @@ export interface ICategory {
         public_id: string;
         type: 'image';
     }[];
-    parentId: string | null; 
-    isActive: boolean;
-    createdAt: string; 
-    updatedAt: string; 
+    parent_id: string | null; 
+    is_active: boolean;
+    created_at: string; 
+    updated_at: string; 
 }

@@ -30,7 +30,7 @@ export const createAddress = async (req: Request, res: Response) => {
         return res.status(401).json({ message: 'Unauthorized' });
     }
 
-    const addressData: Omit<IAddress, 'id' | 'createdAt' | 'updatedAt'> = {
+    const addressData: Omit<IAddress, 'id' | 'created_at' | 'updated_at'> = {
         ...req.body,
         user_id: userId,
     };

@@ -45,7 +45,7 @@ export class PostModel {
    * @param postData The post data to create.
    * @returns A Promise that resolves to the created post data.
    */
-  static async create(postData: Omit<IPost, 'id' | 'createdAt' | 'updatedAt'>): Promise<IPost> {
+  static async create(postData: Omit<IPost, 'id' | 'created_at' | 'updated_at'>): Promise<IPost> {
     const { data, error }: PostgrestSingleResponse<IPost> = await supabase
       .from(TABLE_NAME)
       .insert([postData])
@@ -65,7 +65,7 @@ export class PostModel {
    * @param updates The fields to update.
    * @returns A Promise that resolves to the updated post data or null if not found.
    */
-  static async update(id: string, updates: Partial<Omit<IPost, 'id' | 'createdAt' | 'updatedAt'>>): Promise<IPost | null> {
+  static async update(id: string, updates: Partial<Omit<IPost, 'id' | 'created_at' | 'updated_at'>>): Promise<IPost | null> {
     const { data, error }: PostgrestSingleResponse<IPost> = await supabase
       .from(TABLE_NAME)
       .update(updates)

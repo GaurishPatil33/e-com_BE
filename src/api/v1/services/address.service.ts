@@ -9,11 +9,11 @@ export const findAddressesByUserId = async (userId: string): Promise<IAddress[]>
     return await AddressModel.findByUserId(userId);
 };
 
-export const createAddress = async (addressData: Omit<IAddress, 'id' | 'createdAt' | 'updatedAt'>): Promise<IAddress> => {
+export const createAddress = async (addressData: Omit<IAddress, 'id' | 'created_at' | 'updated_at'>): Promise<IAddress> => {
     return await AddressModel.create(addressData);
 };
 
-export const updateAddress = async (id: string, updates: Partial<Omit<IAddress, 'id' | 'createdAt' | 'updatedAt'>>): Promise<IAddress | null> => {
+export const updateAddress = async (id: string, updates: Partial<Omit<IAddress, 'id' | 'created_at' | 'updated_at'>>): Promise<IAddress | null> => {
     return await AddressModel.update(id, updates);
 };
 

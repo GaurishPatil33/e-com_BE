@@ -20,23 +20,23 @@ describe('Shipment API', () => {
   beforeAll(() => {
     adminUser = {
       id: 'admin123',
-      firstName: 'Admin',
-      lastName: 'User',
+      first_name: 'Admin',
+      last_name: 'User',
       email: 'admin@example.com',
       phone: '1112223333',
       role: 'admin',
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString(),
     };
     customerUser = {
       id: 'customer123',
-      firstName: 'Customer',
-      lastName: 'User',
+      first_name: 'Customer',
+      last_name: 'User',
       email: 'customer@example.com',
       phone: '4445556666',
       role: 'customer',
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString(),
     };
     adminToken = 'mock-admin-token';
     customerToken = 'mock-customer-token';
@@ -62,15 +62,15 @@ describe('Shipment API', () => {
       const mockShipments: IShipment[] = [
         {
           id: 'ship1',
-          orderId: 'order1',
-          userId: adminUser.id,
-          trackingNumber: 'TN12345',
+          order_id: 'order1',
+          user_id: adminUser.id,
+          tracking_number: 'TN12345',
           status: 'shipped',
           carrier: 'FedEx',
-          shippingAddress: { fullName: 'Admin User', phone: '123', street: '123 Admin St', city: 'City', state: 'State', postalCode: '12345', country: 'Country' },
-          estimatedDelivery: new Date().toISOString(),
-          createdAt: new Date().toISOString(),
-          updatedAt: new Date().toISOString(),
+          shipping_address: { full_name: 'Admin User', phone: '123', street: '123 Admin St', city: 'City', state: 'State', postal_code: '12345', country: 'Country' },
+          estimated_delivery: new Date().toISOString(),
+          created_at: new Date().toISOString(),
+          updated_at: new Date().toISOString(),
         },
       ];
       mockedShipmentService.findAllShipments.mockResolvedValue(mockShipments);
@@ -105,18 +105,18 @@ describe('Shipment API', () => {
   describe('POST /api/v1/shipments', () => {
     it('should create a new shipment for an admin user', async () => {
       const newShipmentInput = {
-        orderId: 'order2',
-        trackingNumber: 'TN67890',
+        order_id: 'order2',
+        tracking_number: 'TN67890',
         carrier: 'UPS',
-        shippingAddress: { fullName: 'Admin User', phone: '456', street: '456 Admin Ave', city: 'Town', state: 'State', postalCode: '67890', country: 'Country' },
-        estimatedDelivery: new Date().toISOString(),
+        shipping_address: { full_name: 'Admin User', phone: '456', street: '456 Admin Ave', city: 'Town', state: 'State', postal_code: '67890', country: 'Country' },
+        estimated_delivery: new Date().toISOString(),
       };
       const createdShipment: IShipment = {
         id: 'ship2',
-        userId: adminUser.id,
+        user_id: adminUser.id,
         status: 'pending',
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString(),
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString(),
         ...newShipmentInput,
       };
       mockedShipmentService.createShipment.mockResolvedValue(createdShipment);
@@ -129,7 +129,7 @@ describe('Shipment API', () => {
       expect(res.statusCode).toEqual(201);
       expect(res.body).toEqual(createdShipment);
       expect(mockedShipmentService.createShipment).toHaveBeenCalledWith(expect.objectContaining({
-        userId: adminUser.id,
+        user_id: adminUser.id,
         status: 'pending',
         ...newShipmentInput,
       }));
@@ -137,11 +137,11 @@ describe('Shipment API', () => {
 
     it('should return 401 if not authenticated', async () => {
       const newShipmentInput = {
-        orderId: 'order2',
-        trackingNumber: 'TN67890',
+        order_id: 'order2',
+        tracking_number: 'TN67890',
         carrier: 'UPS',
-        shippingAddress: { fullName: 'Admin User', phone: '456', street: '456 Admin Ave', city: 'Town', state: 'State', postalCode: '67890', country: 'Country' },
-        estimatedDelivery: new Date().toISOString(),
+        shipping_address: { full_name: 'Admin User', phone: '456', street: '456 Admin Ave', city: 'Town', state: 'State', postal_code: '67890', country: 'Country' },
+        estimated_delivery: new Date().toISOString(),
       };
       const res = await request(app)
         .post('/api/v1/shipments')
@@ -153,11 +153,11 @@ describe('Shipment API', () => {
 
     it('should return 500 if there is a server error', async () => {
       const newShipmentInput = {
-        orderId: 'order2',
-        trackingNumber: 'TN67890',
+        order_id: 'order2',
+        tracking_number: 'TN67890',
         carrier: 'UPS',
-        shippingAddress: { fullName: 'Admin User', phone: '456', street: '456 Admin Ave', city: 'Town', state: 'State', postalCode: '67890', country: 'Country' },
-        estimatedDelivery: new Date().toISOString(),
+        shipping_address: { full_name: 'Admin User', phone: '456', street: '456 Admin Ave', city: 'Town', state: 'State', postal_code: '67890', country: 'Country' },
+        estimated_delivery: new Date().toISOString(),
       };
       mockedShipmentService.createShipment.mockRejectedValue(new Error('Database error'));
 
@@ -176,15 +176,15 @@ describe('Shipment API', () => {
       const mockUserShipments: IShipment[] = [
         {
           id: 'ship3',
-          orderId: 'order3',
-          userId: customerUser.id,
-          trackingNumber: 'TN11223',
+          order_id: 'order3',
+          user_id: customerUser.id,
+          tracking_number: 'TN11223',
           status: 'in_transit',
           carrier: 'Local Post',
-          shippingAddress: { fullName: 'Customer User', phone: '789', street: '789 User St', city: 'Village', state: 'State', postalCode: '98765', country: 'Country' },
-          estimatedDelivery: new Date().toISOString(),
-          createdAt: new Date().toISOString(),
-          updatedAt: new Date().toISOString(),
+          shipping_address: { full_name: 'Customer User', phone: '789', street: '789 User St', city: 'Village', state: 'State', postal_code: '98765', country: 'Country' },
+          estimated_delivery: new Date().toISOString(),
+          created_at: new Date().toISOString(),
+          updated_at: new Date().toISOString(),
         },
       ];
       mockedShipmentService.findShipmentsByUserId.mockResolvedValue(mockUserShipments);
@@ -222,15 +222,15 @@ describe('Shipment API', () => {
       const mockOrderShipments: IShipment[] = [
         {
           id: 'ship4',
-          orderId: orderId,
-          userId: customerUser.id,
-          trackingNumber: 'TN44556',
+          order_id: orderId,
+          user_id: customerUser.id,
+          tracking_number: 'TN44556',
           status: 'delivered',
           carrier: 'FedEx',
-          shippingAddress: { fullName: 'Customer User', phone: '101', street: '101 Order St', city: 'Town', state: 'State', postalCode: '11223', country: 'Country' },
-          estimatedDelivery: new Date().toISOString(),
-          createdAt: new Date().toISOString(),
-          updatedAt: new Date().toISOString(),
+          shipping_address: { full_name: 'Customer User', phone: '101', street: '101 Order St', city: 'Town', state: 'State', postal_code: '11223', country: 'Country' },
+          estimated_delivery: new Date().toISOString(),
+          created_at: new Date().toISOString(),
+          updated_at: new Date().toISOString(),
         },
       ];
       mockedShipmentService.findShipmentsByOrderId.mockResolvedValue(mockOrderShipments);
@@ -267,15 +267,15 @@ describe('Shipment API', () => {
     it('should return a shipment by ID for an authenticated user', async () => {
       const mockShipment: IShipment = {
         id: 'ship5',
-        orderId: 'order5',
-        userId: customerUser.id,
-        trackingNumber: 'TN77889',
+        order_id: 'order5',
+        user_id: customerUser.id,
+        tracking_number: 'TN77889',
         status: 'out_for_delivery',
         carrier: 'UPS',
-        shippingAddress: { fullName: 'Customer User', phone: '223', street: '223 User St', city: 'Village', state: 'State', postalCode: '33445', country: 'Country' },
-        estimatedDelivery: new Date().toISOString(),
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString(),
+        shipping_address: { full_name: 'Customer User', phone: '223', street: '223 User St', city: 'Village', state: 'State', postal_code: '33445', country: 'Country' },
+        estimated_delivery: new Date().toISOString(),
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString(),
       };
       mockedShipmentService.findShipmentById.mockResolvedValue(mockShipment);
 
@@ -323,15 +323,15 @@ describe('Shipment API', () => {
       const updateData = { status: 'delivered' };
       const updatedShipment: IShipment = {
         id: shipmentId,
-        orderId: 'order6',
-        userId: adminUser.id,
-        trackingNumber: 'TN99887',
+        order_id: 'order6',
+        user_id: adminUser.id,
+        tracking_number: 'TN99887',
         status: 'delivered',
         carrier: 'FedEx',
-        shippingAddress: { fullName: 'Admin User', phone: '334', street: '334 Admin St', city: 'City', state: 'State', postalCode: '55667', country: 'Country' },
-        estimatedDelivery: new Date().toISOString(),
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString(),
+        shipping_address: { full_name: 'Admin User', phone: '334', street: '334 Admin St', city: 'City', state: 'State', postal_code: '55667', country: 'Country' },
+        estimated_delivery: new Date().toISOString(),
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString(),
       };
       mockedShipmentService.updateShipment.mockResolvedValue(updatedShipment);
 

@@ -22,24 +22,28 @@ const seedUsers = async () => {
 
     const hashedPassword = await bcrypt.hash('password123', 10);
 
-    const usersToInsert: Omit<IUser, 'createdAt' | 'updatedAt'>[] = [
+    const usersToInsert: IUser[] = [
         {
             id: uuidv4(),
-            firstName: 'John',
-            lastName: 'Doe',
+            first_name: 'John',
+            last_name: 'Doe',
             email: 'john.doe@example.com',
             phone: '1234567890',
             password: hashedPassword,
             role: 'customer',
+            created_at: new Date().toISOString(),
+            updated_at: new Date().toISOString(),
         },
         {
             id: uuidv4(),
-            firstName: 'Jane',
-            lastName: 'Smith',
+            first_name: 'Jane',
+            last_name: 'Smith',
             email: 'jane.smith@example.com',
             phone: '0987654321',
             password: hashedPassword,
             role: 'customer',
+            created_at: new Date().toISOString(),
+            updated_at: new Date().toISOString(),
         },
     ];
 
@@ -77,43 +81,47 @@ const seedOrders = async (userIds: string[]) => {
         return;
     }
 
-    const ordersToInsert: Omit<IOrder, 'id' | 'createdAt' | 'updatedAt'>[] = [
+    const ordersToInsert: Omit<IOrder, 'id'>[] = [
         {
-            userId: userIds[0],
+            user_id: userIds[0],
             items: [
-                { productId: uuidv4(), title: 'Laptop', quantity: 1, priceAtPurchase: 1200.00 },
-                { productId: uuidv4(), title: 'Mouse', quantity: 1, priceAtPurchase: 25.00 },
+                { product_id: uuidv4(), title: 'Laptop', quantity: 1, price_at_purchase: 1200.00 },
+                { product_id: uuidv4(), title: 'Mouse', quantity: 1, price_at_purchase: 25.00 },
             ],
-            shippingAddress: {
-                fullName: 'John Doe',
+            shipping_address: {
+                full_name: 'John Doe',
                 phone: '1234567890',
                 street: '123 Main St',
                 city: 'Anytown',
                 state: 'CA',
-                postalCode: '90210',
+                postal_code: '90210',
                 country: 'USA',
             },
-            paymentStatus: 'pending',
-            orderStatus: 'processing',
-            totalAmount: 1225.00,
+            payment_status: 'pending',
+            order_status: 'processing',
+            total_amount: 1225.00,
+            created_at: new Date().toISOString(),
+            updated_at: new Date().toISOString(),
         },
         {
-            userId: userIds[1],
+            user_id: userIds[1],
             items: [
-                { productId: uuidv4(), title: 'Keyboard', quantity: 1, priceAtPurchase: 75.00 },
+                { product_id: uuidv4(), title: 'Keyboard', quantity: 1, price_at_purchase: 75.00 },
             ],
-            shippingAddress: {
-                fullName: 'Jane Smith',
+            shipping_address: {
+                full_name: 'Jane Smith',
                 phone: '0987654321',
                 street: '456 Oak Ave',
                 city: 'Otherville',
                 state: 'NY',
-                postalCode: '10001',
+                postal_code: '10001',
                 country: 'USA',
             },
-            paymentStatus: 'paid',
-            orderStatus: 'shipped',
-            totalAmount: 75.00,
+            payment_status: 'paid',
+            order_status: 'shipped',
+            total_amount: 75.00,
+            created_at: new Date().toISOString(),
+            updated_at: new Date().toISOString(),
         },
     ];
 

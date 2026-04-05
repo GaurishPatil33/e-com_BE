@@ -1,15 +1,15 @@
 export interface IRazorpayOrder {
-    amount: number;
-    amount_due: number;
-    amount_paid: number;
+    amount: number | string;
+    amount_due: number | string;
+    amount_paid: number | string;
     attempts: number;
     created_at: number; // Unix timestamp
     currency: string;
     entity: string;
     id: string; // This is the razorpayOrderId
-    notes: any[]; // Can be more specific if needed
-    offer_id: string | null;
-    receipt: string;
+    notes?: any; // Made optional to accommodate Razorpay's type
+    offer_id?: string | null;
+    receipt?: string;
     status: string;
 }
 

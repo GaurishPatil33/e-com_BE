@@ -22,23 +22,25 @@ describe('Review API', () => {
   beforeAll(() => {
     adminUser = {
       id: 'admin123',
-      firstName: 'Admin',
-      lastName: 'User',
+      first_name: 'Admin',
+      last_name: 'User',
       email: 'admin@example.com',
       phone: '1112223333',
+      password: 'hashedpassword', // Made optional in IUser, but tests might still provide it
       role: 'admin',
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString(),
     };
     customerUser = {
       id: 'customer123',
-      firstName: 'Customer',
-      lastName: 'User',
+      first_name: 'Customer',
+      last_name: 'User',
       email: 'customer@example.com',
       phone: '4445556666',
+      password: 'hashedpassword', // Made optional in IUser, but tests might still provide it
       role: 'customer',
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString(),
     };
     adminToken = 'mock-admin-token';
     customerToken = 'mock-customer-token';
@@ -64,12 +66,12 @@ describe('Review API', () => {
       const mockReviews: IReview[] = [
         {
           id: 'rev1',
-          user: customerUser.id,
-          product: 'prod1',
+          user_id: customerUser.id,
+          product_id: 'prod1',
           rating: 5,
           comment: 'Great product!',
-          createdAt: new Date().toISOString(),
-          updatedAt: new Date().toISOString(),
+          created_at: new Date().toISOString(),
+          updated_at: new Date().toISOString(),
         },
       ];
       mockedReviewService.findAllReviews.mockResolvedValue(mockReviews);
@@ -100,9 +102,10 @@ describe('Review API', () => {
       };
       const createdReview: IReview = {
         id: 'rev2',
-        user: customerUser.id,
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString(),
+        user_id: customerUser.id,
+        product_id: 'prod1',
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString(),
         ...newReviewInput,
       };
       mockedReviewService.createReview.mockResolvedValue(createdReview);
@@ -115,7 +118,7 @@ describe('Review API', () => {
       expect(res.statusCode).toEqual(201);
       expect(res.body).toEqual(createdReview);
       expect(mockedReviewService.createReview).toHaveBeenCalledWith(expect.objectContaining({
-        user: customerUser.id,
+        user_id: customerUser.id,
         ...newReviewInput,
       }));
     });
@@ -157,12 +160,12 @@ describe('Review API', () => {
       const mockUserReviews: IReview[] = [
         {
           id: 'rev3',
-          user: customerUser.id,
-          product: 'prod3',
+          user_id: customerUser.id,
+          product_id: 'prod3',
           rating: 3,
           comment: 'Average product.',
-          createdAt: new Date().toISOString(),
-          updatedAt: new Date().toISOString(),
+          created_at: new Date().toISOString(),
+          updated_at: new Date().toISOString(),
         },
       ];
       mockedReviewService.findReviewsByUserId.mockResolvedValue(mockUserReviews);
@@ -200,12 +203,12 @@ describe('Review API', () => {
       const mockProductReviews: IReview[] = [
         {
           id: 'rev4',
-          user: customerUser.id,
-          product: productId,
+          user_id: customerUser.id,
+          product_id: productId,
           rating: 5,
           comment: 'Excellent!',
-          createdAt: new Date().toISOString(),
-          updatedAt: new Date().toISOString(),
+          created_at: new Date().toISOString(),
+          updated_at: new Date().toISOString(),
         },
       ];
       mockedReviewService.findReviewsByProductId.mockResolvedValue(mockProductReviews);
@@ -232,12 +235,12 @@ describe('Review API', () => {
     it('should return a review by ID', async () => {
       const mockReview: IReview = {
         id: 'rev5',
-        user: customerUser.id,
-        product: 'prod5',
+        user_id: customerUser.id,
+        product_id: 'prod5',
         rating: 4,
         comment: 'Satisfied.',
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString(),
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString(),
       };
       mockedReviewService.findReviewById.mockResolvedValue(mockReview);
 
@@ -273,12 +276,12 @@ describe('Review API', () => {
       const updateData = { comment: 'Updated comment.', rating: 5 };
       const updatedReview: IReview = {
         id: reviewId,
-        user: customerUser.id,
-        product: 'prod6',
+        user_id: customerUser.id,
+        product_id: 'prod6',
         rating: 5,
         comment: 'Updated comment.',
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString(),
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString(),
       };
       mockedReviewService.updateReview.mockResolvedValue(updatedReview);
 

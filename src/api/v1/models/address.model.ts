@@ -48,7 +48,7 @@ export class AddressModel {
    * @param addressData The address data to create.
    * @returns A Promise that resolves to the created address data.
    */
-  static async create(addressData: Omit<IAddress, 'id' | 'createdAt' | 'updatedAt'>): Promise<IAddress> {
+  static async create(addressData: Omit<IAddress, 'id' | 'created_at' | 'updated_at'>): Promise<IAddress> {
     const { data, error }: PostgrestSingleResponse<IAddress> = await supabase
       .from(TABLE_NAME)
       .insert([addressData])
@@ -68,7 +68,7 @@ export class AddressModel {
    * @param updates The fields to update.
    * @returns A Promise that resolves to the updated address data or null if not found.
    */
-  static async update(id: string, updates: Partial<Omit<IAddress, 'id' | 'createdAt' | 'updatedAt'>>): Promise<IAddress | null> {
+  static async update(id: string, updates: Partial<Omit<IAddress, 'id' | 'created_at' | 'updated_at'>>): Promise<IAddress | null> {
     const { data, error }: PostgrestSingleResponse<IAddress> = await supabase
       .from(TABLE_NAME)
       .update(updates)

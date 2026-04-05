@@ -41,9 +41,9 @@ export const createReview = async (req: Request, res: Response) => {
         return res.status(401).json({ message: 'Unauthorized' });
     }
 
-    const reviewData: Omit<IReview, 'id' | 'createdAt' | 'updatedAt'> = {
+    const reviewData: Omit<IReview, 'id' | 'created_at' | 'updated_at'> = {
         ...req.body,
-        user: userId,
+        user_id: userId,
     };
 
     const newReview = await reviewService.createReview(reviewData);

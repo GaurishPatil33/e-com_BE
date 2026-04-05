@@ -19,24 +19,24 @@ const router = Router();
  *     Shipment:
  *       type: object
  *       required:
- *         - orderId
- *         - userId
- *         - trackingNumber
+ *         - order_id
+ *         - user_id
+ *         - tracking_number
  *         - status
  *         - carrier
- *         - shippingAddress
- *         - estimatedDelivery
+ *         - shipping_address
+ *         - estimated_delivery
  *       properties:
  *         id:
  *           type: string
  *           description: The auto-generated ID of the shipment
- *         orderId:
+ *         order_id:
  *           type: string
  *           description: The ID of the associated order
- *         userId:
+ *         user_id:
  *           type: string
  *           description: The ID of the user who owns this shipment
- *         trackingNumber:
+ *         tracking_number:
  *           type: string
  *           description: The tracking number for the shipment
  *         status:
@@ -46,10 +46,10 @@ const router = Router();
  *         carrier:
  *           type: string
  *           description: The shipping carrier (e.g., FedEx, UPS)
- *         shippingAddress:
+ *         shipping_address:
  *           type: object
  *           properties:
- *             fullName:
+ *             full_name:
  *               type: string
  *             phone:
  *               type: string
@@ -59,20 +59,20 @@ const router = Router();
  *               type: string
  *             state:
  *               type: string
- *             postalCode:
+ *             postal_code:
  *               type: string
  *             country:
  *               type: string
  *           description: Shipping address details
- *         estimatedDelivery:
+ *         estimated_delivery:
  *           type: string
  *           format: date-time
  *           description: Estimated delivery date and time
- *         createdAt:
+ *         created_at:
  *           type: string
  *           format: date-time
  *           description: The date and time the shipment was created
- *         updatedAt:
+ *         updated_at:
  *           type: string
  *           format: date-time
  *           description: The date and time the shipment was last updated
@@ -111,22 +111,22 @@ const router = Router();
  *           schema:
  *             type: object
  *             required:
- *               - orderId
- *               - trackingNumber
+ *               - order_id
+ *               - tracking_number
  *               - carrier
- *               - shippingAddress
- *               - estimatedDelivery
+ *               - shipping_address
+ *               - estimated_delivery
  *             properties:
- *               orderId:
+ *               order_id:
  *                 type: string
- *               trackingNumber:
+ *               tracking_number:
  *                 type: string
  *               carrier:
  *                 type: string
- *               shippingAddress:
+ *               shipping_address:
  *                 type: object
  *                 properties:
- *                   fullName:
+ *                   full_name:
  *                     type: string
  *                   phone:
  *                     type: string
@@ -136,11 +136,11 @@ const router = Router();
  *                     type: string
  *                   state:
  *                     type: string
- *                   postalCode:
+ *                   postal_code:
  *                     type: string
  *                   country:
  *                     type: string
- *               estimatedDelivery:
+ *               estimated_delivery:
  *                 type: string
  *                 format: date-time
  *     responses:
@@ -185,7 +185,7 @@ router.get('/user', asyncHandler(authenticate), asyncHandler(getShipmentsByUserI
 
 /**
  * @swagger
- * /api/v1/shipments/order/{orderId}:
+ * /api/v1/shipments/order/{order_id}:
  *   get:
  *     summary: Get shipments by Order ID
  *     tags: [Shipments]
@@ -193,7 +193,7 @@ router.get('/user', asyncHandler(authenticate), asyncHandler(getShipmentsByUserI
  *       - cookieAuth: []
  *     parameters:
  *       - in: path
- *         name: orderId
+ *         name: order_id
  *         schema:
  *           type: string
  *         required: true

@@ -1,20 +1,20 @@
 export interface IShipment {
     id: string;
-    orderId: string;
-    userId: string;
-    trackingNumber: string;
+    order_id: string;
+    user_id: string;
+    tracking_number: string;
     status: "pending" | "shipped" | "in_transit" | "out_for_delivery" | "delivered" | "failed" | "returned";
     carrier: string; // e.g., "FedEx", "UPS", "Local Post"
-    shippingAddress: {
-        fullName: string;
+    shipping_address: {
+        full_name: string;
         phone: string;
         street: string;
         city: string;
         state: string;
-        postalCode: string;
+        postal_code: string;
         country: string;
     };
-    estimatedDelivery: string; // ISO date string
-    createdAt: string;
-    updatedAt: string;
+    estimated_delivery: string; // ISO date string
+    created_at: string;
+    updated_at: string;
 }
