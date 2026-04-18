@@ -29,7 +29,7 @@ export const login = async (email: string, password_plain: string): Promise<{ us
 };
 
 export const generateAuthToken = (userId: string): string => {
-    return jwt.sign({ id: userId }, JWT_SECRET, { expiresIn: '1h' });
+    return jwt.sign({ id: userId }, JWT_SECRET, { expiresIn: '1d' });
 };
 
 export const verifyAuthToken = (token: string): { id: string } | null => {

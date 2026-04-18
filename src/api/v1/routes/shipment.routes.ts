@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import { getAllShipments, getShipmentById, getShipmentsByOrderId, getShipmentsByUserId, createShipment, updateShipment } from '../controllers/shipment.controller';
-import { authenticate } from '../../../middlewares/auth.middleware';
+import { authenticate, requireAdmin } from '../../../middlewares/auth.middleware';
 import { asyncHandler } from '../../../middlewares/asyncHandler';
 
 const router = Router();
@@ -156,8 +156,8 @@ const router = Router();
  *         description: Server error
  */
 router.route('/')
-    .get(asyncHandler(authenticate), asyncHandler(getAllShipments)) // Admin only
-    .post(asyncHandler(authenticate), asyncHandler(createShipment)); // Admin only
+    .get(asyncHandler(authenticate), asyncHandler(requireAdmin), asyncHandler(getAllShipments)) // Admin only
+    .post(asyncHandler(authenticate), asyncHandler(requireAdmin), asyncHandler(createShipment)); // Admin only
 
 /**
  * @swagger
@@ -276,6 +276,6 @@ router.get('/order/:orderId', asyncHandler(authenticate), asyncHandler(getShipme
  */
 router.route('/:id')
     .get(asyncHandler(authenticate), asyncHandler(getShipmentById))
-    .put(asyncHandler(authenticate), asyncHandler(updateShipment)); // Admin only
+    .put(asyncHandler(authenticate), asyncHandler(requireAdmin), asyncHandler(updateShipment)); // Admin only
 
 export default router;

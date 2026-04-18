@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import { getAllUsers, getUserProfile, updateUserProfile, deleteUserAccount } from '../controllers/user.controller';
-import { authenticate } from '../../../middlewares/auth.middleware';
+import { authenticate, requireAdmin } from '../../../middlewares/auth.middleware';
 import { asyncHandler } from '../../../middlewares/asyncHandler';
 
 const router = Router();
@@ -69,7 +69,7 @@ const router = Router();
  *       500:
  *         description: Server error
  */
-router.get('/', asyncHandler(authenticate), asyncHandler(getAllUsers)); // Admin only
+router.get('/', asyncHandler(authenticate),asyncHandler(requireAdmin), asyncHandler(getAllUsers)); // Admin only
 
 /**
  * @swagger

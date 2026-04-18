@@ -187,4 +187,4 @@ router.post('/logout', asyncHandler(logoutUser));
  */
 router.get('/me', asyncHandler(authenticate), asyncHandler(getCurrentUser));
 
-export default router;
+export default router

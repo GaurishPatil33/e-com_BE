@@ -30,12 +30,13 @@ export const loginUser = async (req: Request, res: Response) => {
     res.cookie('token', token, {
         httpOnly: true,
         secure: process.env.NODE_ENV === 'production',
-        maxAge: 3600000, // 1 hour
+        maxAge: 24 * 60 * 60 * 1000, // 1 day
     });
 
     // Exclude password from the response
     const { password: _, ...userWithoutPassword } = user;
-    res.status(200).json({ user: userWithoutPassword, token });
+    // res.status(200).json({ user: userWithoutPassword, token }); //geting no token err
+    res.status(200).json({ user: userWithoutPassword});
 };
 
 export const logoutUser = async (req: Request, res: Response) => {
@@ -46,7 +47,7 @@ export const logoutUser = async (req: Request, res: Response) => {
 export const getCurrentUser = async (req: Request, res: Response) => {
     // The user object should be attached to the request by the authentication middleware
     // @ts-ignore
-    const userId = req.user?.id; 
+    const userId = req.user?.id;
 
     if (!userId) {
         return res.status(401).json({ message: 'Unauthorized' });

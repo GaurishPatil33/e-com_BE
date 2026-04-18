@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import { getAllCategories, getCategoryById, getCategoryBySlug, createCategory, updateCategory, deleteCategory } from '../controllers/category.controller';
-import { authenticate } from '../../../middlewares/auth.middleware';
+import { authenticate, requireAdmin } from '../../../middlewares/auth.middleware';
 import { asyncHandler } from '../../../middlewares/asyncHandler';
 const router = Router();
 
@@ -135,7 +135,7 @@ const router = Router();
  */
 router.route('/')
     .get(asyncHandler(getAllCategories))
-    .post(asyncHandler(authenticate), asyncHandler(createCategory)); // Admin only
+    .post(asyncHandler(authenticate), asyncHandler(requireAdmin), asyncHandler(createCategory)); // Admin only
 
 /**
  * @swagger
@@ -216,8 +216,8 @@ router.route('/')
  */
 router.route('/:id')
     .get(asyncHandler(getCategoryById))
-    .put(asyncHandler(authenticate), asyncHandler(updateCategory)) // Admin only
-    .delete(asyncHandler(authenticate), asyncHandler(deleteCategory)); // Admin only
+    .put(asyncHandler(authenticate), asyncHandler(requireAdmin), asyncHandler(updateCategory)) // Admin only
+    .delete(asyncHandler(authenticate), asyncHandler(requireAdmin), asyncHandler(deleteCategory)); // Admin only
 
 /**
  * @swagger

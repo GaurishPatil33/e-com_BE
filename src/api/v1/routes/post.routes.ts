@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import { getAllPosts, getPostById, createPost, updatePost, deletePost } from '../controllers/post.controller';
-import { authenticate } from '../../../middlewares/auth.middleware';
+import { authenticate, requireAdmin } from '../../../middlewares/auth.middleware';
 import { asyncHandler } from '../../../middlewares/asyncHandler';
 
 const router = Router();
@@ -91,7 +91,7 @@ const router = Router();
  */
 router.route('/')
     .get(asyncHandler(getAllPosts))
-    .post(asyncHandler(authenticate), asyncHandler(createPost)); // Admin only
+    .post(asyncHandler(authenticate),asyncHandler(requireAdmin), asyncHandler(createPost)); // Admin only
 
 /**
  * @swagger
@@ -172,7 +172,7 @@ router.route('/')
  */
 router.route('/:id')
     .get(asyncHandler(getPostById))
-    .put(asyncHandler(authenticate), asyncHandler(updatePost)) // Admin only
-    .delete(asyncHandler(authenticate), asyncHandler(deletePost)); // Admin only
+    .put(asyncHandler(authenticate),asyncHandler(requireAdmin), asyncHandler(updatePost)) // Admin only
+    .delete(asyncHandler(authenticate),asyncHandler(requireAdmin), asyncHandler(deletePost)); // Admin only
 
 export default router;
