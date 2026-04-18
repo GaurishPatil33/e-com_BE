@@ -24,13 +24,28 @@ import { errorHandler } from './middlewares/error.middleware';
 
 import { API_VERSION } from './utils/constants';
 
+const allowedOrigins = [
+	"http://localhost:3000",
+	"https://satvik-black.vercel.app"
+];
+
 
 const app: Application = express();
 
 // Middlewares
 app.use(cors({
 	// origin: '*', //getting cors err for frontend axios api with credentials:true
-	origin: "http://localhost:3000",
+	// origin: "http://localhost:3000",
+
+	origin: function (origin, callback) {
+		if (!origin) return callback(null, true);
+
+		if (allowedOrigins.includes(origin)) {
+			return callback(null, origin);
+		}
+		return callback(new Error("Not allowed by CORS"))
+
+	},
 	credentials: true,
 }));
 app.use(helmet());
