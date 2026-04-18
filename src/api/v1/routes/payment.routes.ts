@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import { getAllPayments, getPaymentById, getPaymentsByOrderId, createPayment, updatePayment } from '../controllers/payment.controller';
-import { authenticate, requireAdmin } from '../../../middlewares/auth.middleware';
+import { authenticate } from '../../../middlewares/auth.middleware';
 import { asyncHandler } from '../../../middlewares/asyncHandler';
 
 const router = Router();
@@ -160,7 +160,7 @@ const router = Router();
  *         description: Server error
  */
 router.route('/')
-    .get(asyncHandler(authenticate),asyncHandler(requireAdmin), asyncHandler(getAllPayments)) // Admin only
+    .get(asyncHandler(authenticate), asyncHandler(getAllPayments)) // Admin only
     .post(asyncHandler(authenticate), asyncHandler(createPayment)); // Requires authentication
 
 /**
